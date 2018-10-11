@@ -1,5 +1,6 @@
 import tweepy
 import csv
+import json
 import pandas as pd
 
 def getKeys():
@@ -19,8 +20,26 @@ auth = tweepy.OAuthHandler(codes["consumer_key"], codes["consumer_secret"])
 auth.set_access_token(codes["access_token"], codes["access_token_secret"])
 
 api = tweepy.API(auth)
-csvFile = open('sample_tweet.csv', 'a')
-csvWriter=csv.writer(csvFile)
-for tweet in tweepy.Cursor(api.search, q="#metoo", count=1, lang="en").items():
-    print(tweet.created_at, tweet.text)
-    csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
+#csvFile = open('sample_tweet.csv', 'a')
+#csvWriter=csv.writer(csvFile)
+#for tweet in tweepy.Cursor(api.search, q="#metoo", count=1, lang="en", tweet_mode='extended').items(1):
+#    print(tweet.created_at, tweet.full_text)
+    #csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
+
+tweets = api.search(q="#metoo", count=50, lang="en", tweet_mode="extended")
+for tweet in tweets:
+    print(tweet.created_at, end=' ')
+
+    if tweet.coordinates is not None:
+        print("Coords: ", tweet.coordinates['coordinates'][0] + ', ' + tweet.coordinates['coordinates'][0], end = ' ')
+    if 'retweeted_status' in tweet._json:
+        retweet_text = 'RT @ ' + api.get_user(tweet.retweeted_status.user.id_str).screen_name
+        #if 'coordinates' in tweet._json:
+        #    print(tweet.created_at, retweet_text, tweet._json['retweeted_status']['full_text'])
+        #else:
+        print(retweet_text, tweet._json['retweeted_status']['full_text'])
+    else:
+        #if 'coordinates' in tweet._json:
+        #    print(tweet.created_at, tweet._json["coordinates"][0], tweet._json["coordinates"][1], tweet.full_text)
+        #else:
+        print(tweet.full_text)
