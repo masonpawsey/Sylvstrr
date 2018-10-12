@@ -31,7 +31,9 @@ for tweet in tweets:
     print(tweet.created_at, end=' ')
 
     if tweet.coordinates is not None:
-        print("Coords: ", tweet.coordinates['coordinates'][0] + ', ' + tweet.coordinates['coordinates'][0], end = ' ')
+        print("Coordinates: ", tweet.coordinates['coordinates'][0], ',', tweet.coordinates['coordinates'][0], end = ' ')
+    elif tweet.user.location is not '':
+        print("Location:", tweet.user.location, end = ' ')
     if 'retweeted_status' in tweet._json:
         retweet_text = 'RT @ ' + api.get_user(tweet.retweeted_status.user.id_str).screen_name
         #if 'coordinates' in tweet._json:
