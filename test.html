@@ -8,7 +8,7 @@
 	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
 	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/css/mdb.min.css">
@@ -67,10 +67,93 @@
 	var map = new mapboxgl.Map({
 		container: 'map', // container id
 		style: 'mapbox://styles/masonpawsey/cjnzi73pd85jn2rmnm1oj9g65', // stylesheet location
-		center: [-120, 40], // starting position [lng, lat]
-		zoom: 4,
+		center: [-122.43512,37.761], // starting position [lng, lat]
+		zoom: 17,
 		interactive: false
 	});
+
+	var locations = [{
+		// CSUB
+	    "id": "2",
+	    "camera": {
+	        center: [-119.10506171751422,35.347574509536656],
+	        zoom: 14.75,
+	        pitch: 50
+	    }
+	}, {
+		// White House
+	    "id": "3",
+	    "camera": {
+	        center: [-77.03657390000001, 38.8976633],
+	        zoom: 17
+	    }
+	}, {
+		// Kremlin
+	    "id": "1",
+	    "camera": {
+	        center: [37.61749940000004,55.7520233],
+	        zoom: 16,
+	        pitch: 25
+	    }
+	}, {
+		// Trump Tower
+	    "id": "4",
+	    "camera": {
+	        center: [-73.973869,40.762459], // starting position [lng, lat]
+	        zoom: 17
+	    }
+	}, {
+		// Buckingham Palace
+	    "id": "5",
+	    "camera": {
+	    	center: [-0.140634, 51.501476], // starting position [lng, lat]
+	    	zoom: 15,
+	    	pitch: 75,
+	    	yaw: 25,
+	    }
+	}, {
+		// mar - a - lago
+		"id": "6",
+	    "camera": {
+	        center: [-80.037980,26.676820], // starting position [lng, lat]
+	        zoom: 17
+	    }
+	 }, {
+	 	// the castro
+		"id": "7",
+	    "camera": {
+	        center: [-122.43512,37.761], // starting position [lng, lat]
+	        zoom: 17,
+	    }
+	}, {
+	 	// the bean
+		"id": "8",
+	    "camera": {
+	        center: [-87.620659184,41.8762748282], // starting position [lng, lat]
+	        zoom: 17,
+	    }
+	}];
+
+	function playback(index) {
+	    // Animate the map position based on camera properties
+	    map.flyTo(locations[index].camera);
+
+	    map.once('moveend', function() {
+	        // Duration the slide is on screen after interaction
+	        window.setTimeout(function() {
+	            // Increment index
+	            index = (index + 1 === locations.length) ? 0 : index + 1;
+	            playback(index);
+	        }, 3000); // After callback, show the location for 3 seconds.
+	    });
+	}
+
+	map.on('load', function() {
+	    // Start the playback animation for each borough
+	    playback(0);
+	});
+
+
 
 	$(document).ready(function() {
 		$('input').focus(function() {
