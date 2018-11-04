@@ -51,7 +51,7 @@ struct Hidden {
 
     double Activation() {
         //return(1.0/(1.0+exp(-charge)));
-        return(2.0/(1.0+exp(-2.0*charge)) - 1.0);
+        return(2.0/(1.0+exp(-2.0*charge)) - 1.0);   //tanh
     }
 };
 struct Output {
@@ -61,7 +61,7 @@ struct Output {
 
     double Activation() {
         //return(1.0/(1.0+exp(-charge)));
-        return(2.0/(1.0+exp(-2.0*charge)) - 1.0);
+        return(2.0/(1.0+exp(-2.0*charge)) - 1.0);   //tanh
     }
 };
 struct Layer {
@@ -77,17 +77,19 @@ int main(int argc, char *argv[]) {
     ifstream file("full-corpus.csv");			// File to load data
     srand(time(NULL));
     Layer layer1;
-    Output conf[3];
+    Output conf[3]; //Output conf in Positive, Negative, and Neutral
     /* 
      * Part 0: Code to load in from a CSV, no need to edit this
      */
     unsigned int it = 0;
     string line;
+    //read file into vector
     while(getline(file, line)) {
-        vector<string> row;
+        vector<string> row;         //create a second string to push into the vector of string vectors
         stringstream iss(line);
 
         string val;
+        //iterate through each line of a csv using ',' as separators
         while (getline(iss, val, ',')) {
             try {
                 row.push_back(val);
@@ -99,7 +101,8 @@ int main(int argc, char *argv[]) {
         data.push_back(row);
         it++;
     }
-    Data input[it];
+    Data input[it];     //create a struct array for Data to keep track
+    // of the csv values
     /* 
      * Part 1: Reflex agent
      */
@@ -115,11 +118,13 @@ int main(int argc, char *argv[]) {
         //	3 - TweetDate
         // The final column (4) is the TweetText
         input[i].text = row.back();
+        //remove beginning and ending '"' from the text line in csv
         input[i].text = input[i].text.substr(1,input[i].text.length()-2);
-        input[i].Hash();
+        input[i].Hash();    //hash the text into unique integer
         /*for(int f = 0; f < 13; f++) {
           input[i].x[f] = row[f];
           }*/
+        //set value of expected output
         if (row[1] == "\"positive\"")
             input[i].pos = 1;
         else if (row[1] == "\"negative\"")
@@ -128,17 +133,20 @@ int main(int argc, char *argv[]) {
             input[i].neu = 1;
         i++;
     }
+    //randomize weights for hidden neuron layer
     for(int k = 0; k < 5; k++) {
         for(int s = 0; s < 140; s++)
             layer1.neuron[k].w[s] = fmod(rand(),(2.4/it)*2.0) - 2.4/it;
         layer1.neuron[k].theta = fmod(rand(),(2.4/it)*2.0) - 2.4/it;
     }
+    //randomize weights for output neuron layer
     for(int k = 0; k < 3; k++) {
         for(int s = 0; s < 5; s++)
             conf[k].w[s] = fmod(rand(),(2.4/it)*2.0) - 2.4/it;
         conf[k].theta = fmod(rand(),(2.4/it)*2.0) - 2.4/it;
     }
 
+    //TRAIN NEURAL NETWORK
     int epoch = 1;
     for(int l = 0; l < 500; l++) {
         double perCor = 0;
@@ -154,24 +162,31 @@ int main(int argc, char *argv[]) {
                 neg++;
             if(input[k].neu == 1)
                 neu++;
+            //calculate charges
             for(int s = 0; s < 5; s++) {
                 for(int q = 0; q < input[k].wordCount; q++) 
                     layer1.neuron[s].charge += input[k].hashedText[q]*layer1.neuron[s].w[q];
                 layer1.neuron[s].charge -= layer1.neuron[s].theta;
             }
-            layer1.neuron[0].y = layer1.neuron[0].Activation();
-            layer1.neuron[1].y = layer1.neuron[1].Activation();
+            //Push charge into activation function for hidden neurons
+            for(int s = 0; s < 5; s++) {
+                layer1.neuron[s].y = layer1.neuron[s].Activation();
+            }
+            //Calculate charge for output neurons
             for(int f = 0; f < 3; f++) {
                 conf[f].charge = layer1.neuron[0].y*conf[f].w[0] + layer1.neuron[1].y*conf[f].w[1] - conf[f].theta;
             }
-            conf[0].y = conf[0].Activation();
-            conf[1].y = conf[1].Activation();
-            conf[2].y = conf[2].Activation();
+            //calulate conf in Positivity, Negativity, and Neutrality
+            conf[0].y = conf[0].Activation();   //Pos
+            conf[1].y = conf[1].Activation();   //Neg
+            conf[2].y = conf[2].Activation();   //Neu
 
+            //output information pertaining to the current run about the values of each guess and the correct values
             cout << "Epoch " << epoch << ",\tIteration " << 1+iteration << ":\tPrediction is [" << conf[0].y << ", " 
                 << conf[1].y << ", " << conf[2].y << "]" 
                 << "\t\t[" << input[k].pos << ", " << input[k].neg << ", " << input[k].neu << "]" << endl;
             iteration++;
+            //calculate performance to later calculate MAD
             perf = perf + abs(input[k].pos - conf[0].y) + abs(input[k].neg - conf[1].y) + abs(input[k].neu - conf[2].y);
             //calculate percentage correct
             if (conf[0].y >= conf[1].y && conf[0].y >= conf[2].y && input[k].pos == 1) {
@@ -189,12 +204,15 @@ int main(int argc, char *argv[]) {
             //conf[0].delta = conf[0].y*(1-conf[0].y)*(input[k].pos - conf[0].y);
             //conf[1].delta = conf[1].y*(1-conf[1].y)*(input[k].neg - conf[1].y);
             //conf[2].delta = conf[2].y*(1-conf[2].y)*(input[k].neu - conf[2].y);
+            //
+            //Update deltas for feedback and store previous deltas for momentum
             conf[0].prevDelta = conf[0].delta;
             conf[0].delta = (1-conf[0].y*conf[0].y)*(input[k].pos - conf[0].y);
             conf[1].prevDelta = conf[1].delta;
             conf[1].delta = (1-conf[1].y*conf[1].y)*(input[k].neg - conf[1].y);
             conf[0].prevDelta = conf[2].delta;
             conf[2].delta = (1-conf[2].y*conf[2].y)*(input[k].neu - conf[2].y);
+            //Update output neuron weights and theta
             for(int s = 0; s < 3; s++) {
                 for(int f = 0; f < 5; f++)  {
                     conf[s].w[f] = conf[s].w[f] + 0.9*conf[s].prevDelta + 0.05*layer1.neuron[f].y*conf[s].delta;
@@ -212,7 +230,7 @@ int main(int argc, char *argv[]) {
                 }
                 layer1.neuron[s].delta *= sum;
             }
-
+            //Update hidden layer weights and theta
             for(int s = 0; s < 5; s++) {
                 for(int f = 0; f < input[k].wordCount; f++) {
                     layer1.neuron[s].w[f] = layer1.neuron[s].w[f] + 0.9*layer1.neuron[s].prevDelta 
