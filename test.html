@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8' />
+	<title>Display a map</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/css/mdb.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/js/mdb.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="container-fluid no-gutters">
+		<div class="row">
+			<div id="map">
+			</div>
+			<div class="col"></div>
+			<div class="col text-center no-gutters header">
+				<h1>sylvester</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col header-text">
+				<div class="row">
+					<div class="col-md-12 col-lg-3"></div>
+					<div class="col-md-12 col-lg-6 header-text">
+						sentiment analysis of <span style="color:#0084b4">tweets</span>, based on <span style="color:#EE6352">keywords</span> for specific <span style="color:#4CB944">geographic areas</span>
+					</div>
+					<div class="col-md-12 col-lg-3"></div>
+				</div>
+			</div>
+		</div>
+		<br><br><br>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-3 input-effect">
+				<div class="md-form">
+					<input type="text" id="keyword" class="form-control">
+					<label for="keyword" class="float-up keyword-label"><span class="keyword-example"></span></label>
+				</div>
+			</div>
+			<div class="col-3 input-effect">
+				<div class="md-form">
+					<input type="text" id="location" class="form-control">
+					<label for="location" class="float-up location-label"><span class="location-example"></span></label>
+				</div>
+			</div>
+		</div>
+		<br><br>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col text-center">
+				<button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">search</button>
+			</div>
+		</div>
+	</div>
+	<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoibWFzb25wYXdzZXkiLCJhIjoiY2puemkzb3N0MWY4djNra2JsZzBpaXpicSJ9.O8dFlt7FrskfE-GL8qvBUA';
+	var map = new mapboxgl.Map({
+		container: 'map', // container id
+		style: 'mapbox://styles/masonpawsey/cjnzi73pd85jn2rmnm1oj9g65', // stylesheet location
+		center: [-120, 40], // starting position [lng, lat]
+		zoom: 4,
+		interactive: false
+	});
+
+	$(document).ready(function() {
+		$('input').focus(function() {
+			$(this).next('.float-up').addClass('active');
+		});
+
+		$('input').focusout(function() {
+			if ($(this).val().length < 1) {
+				$(this).next('.float-up').removeClass('active');
+			}
+		});
+
+		// to animate
+		$('.keyword-label').text('Keyword');
+		$('.location-label').text('Location');
+	});
+	</script>
+</body>
+
+</html>
