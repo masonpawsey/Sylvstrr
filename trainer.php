@@ -4,12 +4,12 @@
 	<meta charset="UTF-8">
 	<title>AI Trainer 💪🏽</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -26,30 +26,71 @@
 		<br>
 		<div class="row">
 			<div class="col text-center">
-				<code>Big shout out to Myrtis Painter on her 106th bday, but celebrating the milestone at #TacoBell confirms two things: You don't care about seeing 107 and there is always an element of luck and randomness to longevity. #NachosRule</code>
+				<code data-id=""></code>
 			</div>
 		</div>
 		<br>
 		<div class="row text-center">
-			<div class="col"><button type="button" class="btn btn-success w-100 positive" data-toggle="button" aria-pressed="false" autocomplete="off">Positive (p)</button></div>
-			<div class="col"><button type="button" class="btn btn-primary w-100 neutral" data-toggle="button" aria-pressed="false" autocomplete="off">Neutral (o)</button></div>
-			<div class="col"><button type="button" class="btn btn-danger w-100 negative" data-toggle="button" aria-pressed="false" autocomplete="off">Negative (i)</button></div>
+			<div class="col-4"><button type="button" class="btn btn-success w-100 positive" data-toggle="button" aria-pressed="false" autocomplete="off">Positive (p)</button></div>
+			<div class="col-4"><button type="button" class="btn btn-primary w-100 neutral" data-toggle="button" aria-pressed="false" autocomplete="off">Neutral (o)</button></div>
+			<div class="col-4"><button type="button" class="btn btn-danger w-100 negative" data-toggle="button" aria-pressed="false" autocomplete="off">Negative (i)</button></div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
 
+			// Going to have some issues with the tweet being "in use" but never actually reported on... like when a Tweet gets loaded and the page is refreshed
+
+			function newTweet() {
+				$.ajax({
+					url: 'get_tweets_for_trainer.php',
+					type: 'POST',
+					data: {},
+					success: function (result) {
+						$('code').html($.parseJSON(result)['text']);
+						$('code').attr('data-id',$.parseJSON(result)['id']);
+					}
+				});
+			}
+
 			function positive() {
 				console.log('positive');
+				$.ajax({
+					url: 'update_sentiment.php',
+					type: 'POST',
+					data: {id:$('code').attr('data-id'), sentiment:'positive'},
+					success: function (result) {
+						console.log(result);
+						newTweet();
+					}
+				});
 			}
 
 			function neutral() {
 				console.log('neutral');
+				$.ajax({
+					url: 'update_sentiment.php',
+					type: 'POST',
+					data: {id:$('code').attr('data-id'), sentiment:'neutral'},
+					success: function (result) {
+						console.log(result);
+						newTweet();
+					}
+				});
 			}
 
 			function negative() {
 				console.log('negative');
+				$.ajax({
+					url: 'update_sentiment.php',
+					type: 'POST',
+					data: {id:$('code').attr('data-id'), sentiment:'negative'},
+					success: function (result) {
+						console.log(result);
+						newTweet();
+					}
+				});
 			}
 
 			// handle keypress 
@@ -78,6 +119,8 @@
 			$('.negative').on('click', function() {
 				negative();
 			});
+
+			newTweet();
 		});
 	</script>
 </body>
