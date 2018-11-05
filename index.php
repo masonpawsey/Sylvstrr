@@ -32,7 +32,7 @@ $path = 'tweets/'.$_SESSION['id'];
 </head>
 
 <body>
-	<div class="container-fluid no-gutters">
+	<main role="main" class="container-fluid no-gutters">
 		<div class="row">
 			<div id="map">
 			</div>
@@ -56,31 +56,44 @@ $path = 'tweets/'.$_SESSION['id'];
 		<br><br><br>
 		<form action="search.php" method="POST">
 			<div class="row">
-				<div class="col"></div>
-				<div class="col-3 input-effect">
-					<div class="md-form">
-						<input type="text" autocomplete="off" id="keyword" name="keyword" class="form-control">
-						<label for="keyword" class="float-up keyword-label">Keywords</label>
-						<span class="help d-none">Separate keywords with a space</span>
+				<div class="col-6"></div>
+				<div class="col-6">
+					<div class="row">
+						<div class="col-md-12 col-lg-6 input-effect">
+							<div class="md-form">
+								<input type="text" autocomplete="off" id="keyword" name="keyword" class="form-control">
+								<label for="keyword" class="float-up keyword-label">Keywords</label>
+								<span class="help d-none">Separate keywords with a space</span>
+							</div>
+						</div>
+						<div class="col-md-12 col-lg-6 input-effect">
+							<div class="md-form">
+						    	<input type="text" autocomplete="off" class="form-control" name="location" id="location">
+						    	<label for="location" class="float-up location-label">Location</label>
+						    </div>
+					    </div>
 					</div>
 				</div>
-				<div class="col-3 input-effect">
-					<div class="md-form">
-				    	<input type="text" autocomplete="off" class="form-control" name="location" id="location">
-				    	<label for="location" class="float-up location-label">Location</label>
-				    </div>
-			    </div>
 			</div>
 			<br><br>
 			<div class="row">
 				<div class="col"></div>
 				<div class="col text-center">
 					<!-- <input type="submit" name="submit" value="Submit"/> -->
-					<input type="submit" class="btn btn-primary submit" data-toggle="button" aria-pressed="false" autocomplete="off">
+					<input type="submit" class="btn btn-success submit" data-toggle="button" aria-pressed="false" autocomplete="off">
 				</div>
 			</div>
 		</form>
-	</div>
+		<br><br>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col text-right" style="position: absolute; bottom: 10;">
+				<a href="trainer/trainer.php">
+					<button type="button" class="btn btn-primary">Train me</button>
+				</a>
+			</div>
+		</div>
+	</main>
 	<script>
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFzb25wYXdzZXkiLCJhIjoiY2puemkzb3N0MWY4djNra2JsZzBpaXpicSJ9.O8dFlt7FrskfE-GL8qvBUA';
 	var map = new mapboxgl.Map({
