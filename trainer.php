@@ -16,7 +16,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<div class="container">
+	<main role="main" class="container">
 		<br>
 		<div class="row">
 			<div class="col text-center">
@@ -35,7 +35,16 @@
 			<div class="col-4"><button type="button" class="btn btn-primary w-100 neutral" data-toggle="button" aria-pressed="false" autocomplete="off">Neutral (o)</button></div>
 			<div class="col-4"><button type="button" class="btn btn-danger w-100 negative" data-toggle="button" aria-pressed="false" autocomplete="off">Negative (i)</button></div>
 		</div>
-	</div>
+	</main>
+
+	<footer class="footer">
+		<div class="container">
+			<span class="col text-success">Positive: </span>
+			<span class="col text-primary">Neutral: </span>
+			<span class="col text-danger">Negative: </span>
+			<span class="float-right">Total: x/y </span>
+		</div>
+	</footer>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
