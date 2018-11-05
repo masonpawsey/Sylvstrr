@@ -37,20 +37,36 @@
 		</div>
 	</main>
 
-	<footer class="footer">
+	<footer class="footer d-sm-none d-md-block">
 		<div class="container">
-			<span class="col text-success">Positive: </span>
-			<span class="col text-primary">Neutral: </span>
-			<span class="col text-danger">Negative: </span>
-			<span class="float-right">Total: x/y </span>
+			<span class="col positive-stat text-success">Positive: </span>
+			<span class="col neutral-stat text-primary">Neutral: </span>
+			<span class="col negative-stat text-danger">Negative: </span>
+			<span class="float-right" style="padding-right: 10px;"><a href="../">Try it</a></span>
+			<span class="float-right remaining-stat" style="padding-right: 10px;"></span>
+			<span class="float-right total-stat" style="padding-right: 10px;"></span>
 		</div>
 	</footer>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
+			function getStats() {
+				$.ajax({
+					url: 'stats.php',
+					type: 'POST',
+					data: {},
+					success: function (result) {
+						// console.log($.parseJSON(result)['positive']);
+						$('.positive-stat').text('Positive: ' + $.parseJSON(result)['positive']);
+						$('.neutral-stat').text('Neutral: ' + $.parseJSON(result)['neutral']);
+						$('.negative-stat').text('Negative: ' + $.parseJSON(result)['negative']);
+						$('.total-stat').text('Done: ' + $.parseJSON(result)['done']);
+						$('.remaining-stat').text('Remaining: ' + $.parseJSON(result)['unknown']);
+					}
+				});
+			}
 
 			// Going to have some issues with the tweet being "in use" but never actually reported on... like when a Tweet gets loaded and the page is refreshed
-
 			function newTweet() {
 				$.ajax({
 					url: 'get_tweets_for_trainer.php',
@@ -59,6 +75,7 @@
 					success: function (result) {
 						$('code').html($.parseJSON(result)['text']);
 						$('code').attr('data-id',$.parseJSON(result)['id']);
+						getStats();
 					}
 				});
 			}
@@ -130,6 +147,8 @@
 			});
 
 			newTweet();
+			getStats();
+
 		});
 	</script>
 </body>
