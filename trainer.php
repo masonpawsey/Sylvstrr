@@ -43,6 +43,7 @@
 			<span class="col neutral-stat text-primary">Neutral: </span>
 			<span class="col negative-stat text-danger">Negative: </span>
 			<span class="float-right" style="padding-right: 10px;"><a href="../">Try it</a></span>
+			<span class="float-right" style="padding-right: 10px;"><a href="../create_corpus.php">Corpus file</a></span>
 			<span class="float-right remaining-stat" style="padding-right: 10px;"></span>
 			<span class="float-right total-stat" style="padding-right: 10px;"></span>
 		</div>
