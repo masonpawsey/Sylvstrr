@@ -12,7 +12,7 @@ $statement = $dbh->prepare('SELECT sentiment, text FROM tweets WHERE sentiment I
 $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-$file = fopen("corpus.csv", "a") or die("Unable to open file!");
+$file = fopen("corpus.csv", "w") or die("Unable to open file!");
 chmod(__DIR__."/corpus.csv", 0777);
 foreach ($results as $key => $value) {
 	$text =  "\"".$value['sentiment']."\",\"".trim($value['text'])."\"\n";
