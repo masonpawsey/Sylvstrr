@@ -8,7 +8,7 @@ $user = 'phpmyadmin';
 $pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
 $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
 
-$statement = $dbh->prepare('SELECT sentiment, text FROM tweets WHERE sentiment IS NOT NULL LIMIT 100');
+$statement = $dbh->prepare('SELECT sentiment, text FROM tweets WHERE sentiment IS NOT NULL');
 $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
