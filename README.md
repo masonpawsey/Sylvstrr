@@ -1,6 +1,6 @@
 # 4910-Senior-Project-Fall-2018
 
-- [ ] Add quotes around the keywords so it searches for the full query e.g. "taco bell"
+- [x] Add quotes around the keywords so it searches for the full query e.g. "taco bell"
 
 - [ ] Red highlight around the phrase "taco bell" and also "tacobell" 
 
