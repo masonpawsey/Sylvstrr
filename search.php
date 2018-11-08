@@ -49,6 +49,7 @@ $statement->execute([
 // Print errors, if they exist
 if($statement->errorInfo()[0] != "00000") {
 	print_r($statement->errorInfo());
+	die();
 } else {
 	// Store the lat and long from the database to build our query
 	$results = $statement->fetch(PDO::FETCH_ASSOC);
@@ -64,7 +65,7 @@ if(empty($latitude) || empty($longitude)) {
 
 // The passed keywords (our query doesn't care how this is formatted -
 // so spaces will separate the keywords)
-$keyword = $_POST['keyword'];
+$keyword = "'".$_POST['keyword']."'";
 $session_id = $_SESSION['id'];
 // This is the file that we will store these Tweets in
 $file_id = uniqid();
