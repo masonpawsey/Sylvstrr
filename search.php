@@ -33,11 +33,6 @@ if(empty($_POST)) {
 <pre>
 <?php
 
-// Connect to the database
-$user = 'phpmyadmin';
-$pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
-$dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
-
 // The location gets passed to us as "City, Country". This will
 // exploded that into an array of ["city", "country"]. We will 
 // use that array to get the lat and long from the database
@@ -45,13 +40,22 @@ $location = explode(', ',$_POST['location']);
 $city = $location[0];
 $country = $location[1];
 
-$statement = $dbh->prepare('SELECT latitude, longitude FROM location WHERE city = :city AND country = :country');
+// If they don't provide a location, die
+if(empty($latitude) || empty($longitude)) {
+	echo "Error";
+	die();
+}
 
+// Connect to the database
+$user = 'phpmyadmin';
+$pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
+$dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
+
+$statement = $dbh->prepare('SELECT latitude, longitude FROM location WHERE city = :city AND country = :country');
 $statement->execute([
 	'city' => $city,
 	'country' => $country
 ]);
-
 // Print errors, if they exist
 if($statement->errorInfo()[0] != "00000") {
 	print_r($statement->errorInfo());
@@ -61,12 +65,6 @@ if($statement->errorInfo()[0] != "00000") {
 	$results = $statement->fetch(PDO::FETCH_ASSOC);
 	$latitude = $results['latitude'];	
 	$longitude = $results['longitude'];
-}
-
-// If they don't provide a location, die
-if(empty($latitude) || empty($longitude)) {
-	echo "Error";
-	die();
 }
 
 // The passed keywords (our query doesn't care how this is formatted -

@@ -16,13 +16,6 @@ if ($auth->isLogged()) {
 	header("Location: home.php");
 	die('You are logged in');
 }
-
-$_SESSION['id'] = uniqid();
-$path = 'tweets/'.$_SESSION['id'];
-
-// if (!is_dir($path)) {
-//     mkdir($path, 0777, true);
-// }
 ?>
 <html>
 <head>
@@ -64,44 +57,13 @@ $path = 'tweets/'.$_SESSION['id'];
 				<div class="row">
 					<div class="col-md-12 col-lg-3"></div>
 					<div class="col-md-12 col-lg-6 header-text">
-						sentiment analysis of <span style="color:#0084b4">tweets</span>, based on <span style="color:#EE6352">keywords</span> for specific <span style="color:#4CB944">geographic areas</span>
+						register your account
 					</div>
 					<div class="col-md-12 col-lg-3"></div>
 				</div>
 			</div>
 		</div>
 		<br><br><br>
-		<!-- Search form -->
-		<!-- <form action="search.php" method="POST">
-			<div class="row">
-				<div class="col-6"></div>
-				<div class="col-6">
-					<div class="row">
-						<div class="col-md-12 col-lg-6 input-effect">
-							<div class="md-form">
-								<input type="text" autocomplete="off" id="keyword" name="keyword" class="form-control">
-								<label for="keyword" class="float-up keyword-label">Keywords</label>
-								<span class="help d-none">Separate keywords with a space</span>
-							</div>
-						</div>
-						<div class="col-md-12 col-lg-6 input-effect">
-							<div class="md-form">
-						    	<input type="text" autocomplete="off" class="form-control" name="location" id="location">
-						    	<label for="location" class="float-up location-label">Location</label>
-						    </div>
-					    </div>
-					</div>
-				</div>
-			</div>
-			<br><br>
-			<div class="row">
-				<div class="col"></div>
-				<div class="col text-center">
-					<input type="submit" class="btn btn-success submit" data-toggle="button" aria-pressed="false" autocomplete="off">
-				</div>
-			</div>
-		</form> -->
-		<!-- Login form -->
 		<form>
 			<div class="row">
 				<div class="col-6"></div>
@@ -109,7 +71,7 @@ $path = 'tweets/'.$_SESSION['id'];
 					<div class="row">
 						<div class="col-md-12 col-lg-6 input-effect">
 							<div class="md-form">
-								<input type="text" autocomplete="off" id="email" name="email" class="form-control">
+								<input type="email" autocomplete="off" id="email" name="email" class="form-control">
 								<label for="email" class="float-up">Email</label>
 							</div>
 						</div>
@@ -117,6 +79,7 @@ $path = 'tweets/'.$_SESSION['id'];
 							<div class="md-form">
 						    	<input type="password" autocomplete="off" class="form-control" name="password" id="password">
 						    	<label for="password" class="float-up">Password</label>
+						    	<span class="help d-none">Don't write hunter2...</span>
 						    </div>
 					    </div>
 					</div>
@@ -126,23 +89,14 @@ $path = 'tweets/'.$_SESSION['id'];
 			<div class="row">
 				<div class="col"></div>
 				<div class="col text-center">
-					<input type="submit" class="btn btn-success submit" data-toggle="button" aria-pressed="false" autocomplete="off" value="Login">
+					<input type="submit" class="btn btn-success submit" data-toggle="button" value="Register" aria-pressed="false" autocomplete="off">
 				</div>
 			</div>
 		</form>
 		<div class="row">
 			<div class="col"></div>
 			<div class="col text-center">
-				<a href="signup.php">Need an account?</a>
-			</div>
-		</div>
-		<br><br>
-		<div class="row">
-			<div class="col"></div>
-			<div class="col text-right" style="position: absolute; bottom: 10;">
-				<a href="trainer/trainer.php">
-					<button type="button" class="btn btn-primary">Train me</button>
-				</a>
+				<a href="../">Already have an account?</a>
 			</div>
 		</div>
 	</main>
@@ -256,35 +210,40 @@ $path = 'tweets/'.$_SESSION['id'];
 			}
 		});
 
-
 		// Gonna need to validate these some more...
 		$('.submit').on('click', function() {
 			var formdata = $("form").serialize();
 			$.ajax({
-				url: 'login.php',
+				url: 'register.php',
 				type: 'POST',
 				data: formdata,
 				dataType: "json",
 				success: function (result) {
 					if(result['error'] === true) {
-						// We supply a title in our error messages but PHPAuth doesn't
-						// so, if `result['title']` doesn't exist, just print 'Error'
 						toastr.error(result['message'], result['title'] || 'Error');
 					} else {
-						window.location.href = "home.php";
+						toastr.success(result['message'], result['title'] || 'Success',  { timeOut: 1500, onHidden: function() { window.location.href = "home.php"; }});
 					}
+					console.log(result);
 				}
 			});
 		});
 
-		$('#keyword').on('focus', function() {
+		$('#password').on('focus', function() {
 			$('.help').removeClass("d-none");
 			$('.help').addClass("d-block");
 		});
 
-		$('#keyword').on('blur', function() {
+		$('#password').on('blur', function() {
 			$('.help').removeClass("d-block");
 			$('.help').addClass("d-none");
+		});
+
+		$('#password').on('keyup', function() {
+			if($(this).val().toLowerCase() == 'hunter2') {
+				$(this).val('');
+				toastr.error('Are you trying to be hacked?', 'ID-10-T error');
+			}
 		});
 
 		// Cities are included in cities.js above
