@@ -6,6 +6,8 @@
 
 - [ ] Stylize the results
 
-- [ ] User accounts
+- [x] User accounts
 
 - [ ] Move away from Material style buttons
+
+- [ ] Pull passwords out and store them in a `.gitignore` file
