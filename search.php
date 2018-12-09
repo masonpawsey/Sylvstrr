@@ -1,37 +1,22 @@
 <?php
+
+// Authenticate me!
 session_start();
+require_once 'vendor/autoload.php';
 
-if(empty($_POST)) {
-	header("Location: ../");
-	die();
+use PHPAuth\Config as PHPAuthConfig;
+use PHPAuth\Auth as PHPAuth;
+
+require_once('credentials.php');
+$dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
+
+$config = new PHPAuthConfig($dbh);
+$auth = new PHPAuth($dbh, $config);
+
+if (!$auth->isLogged()) {
+	header("HTTP/1.1 401 Unauthorized");
+	exit;
 }
-
-?>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.13/css/mdb.min.css" rel="stylesheet">
-<style type="text/css">
-	body {
-		background: #263238;
-		color: #fff;
-	}
-	.highlight {
-		color: red;
-	}
-	a {
-		color: #fff;
-	}
-	a:visited {
-		color: #fff;
-	}
-	pre {
-		color: #bbb;
-	}
-</style>
-<pre>
-<?php
 
 // The location gets passed to us as "City, Country". This will
 // exploded that into an array of ["city", "country"]. We will 
@@ -70,8 +55,8 @@ if($statement->errorInfo()[0] != "00000") {
 // so spaces will separate the keywords)
 $keyword = "'".$_POST['keyword']."'";
 $session_id = $_SESSION['id'];
-// This is the file that we will store these Tweets in
-$file_id = uniqid();
+
+// Add this query to the users records in the database
 
 // Run this script as sudo because we hate security :)
 // (and because ./scrape-twitter is protected and www-data can't get to it)
@@ -83,11 +68,9 @@ $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class
 // Check for the keyword without spaces
 $keyword = str_replace(' ', '', $keyword);
 $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
-print_r(json_decode($result, true));
+print_r(json_encode($result));
 
 $dbh = null;
 
-// echo "done!";
 
-?></pre>
-<a href="..">Back</a>
+?>
