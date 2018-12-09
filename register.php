@@ -33,8 +33,7 @@ if($passwordStrength['score'] < 2) {
 	error(array("error" => true, "title" => "Wimpy password!", "message" => "You could crack that thing in " . round($passwordStrength['crack_time']/60,2) . " minutes"));
 }
 
-$user = 'phpmyadmin';
-$pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
+require_once('credentials.php');
 $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
 
 // If the account doesn't already exist, make one!

@@ -4,8 +4,7 @@
 // and generate  CSV that we can use to train our AI engine
 
 // Connect to the database
-$user = 'phpmyadmin';
-$pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
+require_once('credentials.php');
 $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
 
 $statement = $dbh->prepare('SELECT sentiment, text FROM tweets WHERE sentiment IS NOT NULL');
