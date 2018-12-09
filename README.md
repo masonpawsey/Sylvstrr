@@ -11,3 +11,5 @@
 - [ ] User analytics
 
 - [ ] Favicon
+
+- [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
