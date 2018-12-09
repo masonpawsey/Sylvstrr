@@ -41,8 +41,8 @@ $city = $location[0];
 $country = $location[1];
 
 // If they don't provide a location, die
-if(empty($latitude) || empty($longitude)) {
-	echo "Error";
+if(empty($city) || empty($country)) {
+	echo "Error, please provide a location";
 	die();
 }
 
