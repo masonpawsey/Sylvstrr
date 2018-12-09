@@ -150,29 +150,32 @@ if (!$auth->isLogged()) {
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Trending on Twitter</strong></h5>
-                                <p class="card-text">You might want to try combining these trending keywords and locations</p>
-                                <div class="row">
-                                  <div class="col">
-                                    <h5 class="card-title"><strong>Keywords</strong></h5>
-                                    <p class="card-text">
-                                      <ul>
-                                        <li>Tacos</li>
-                                        <li>Burritos</li>
-                                        <li>Quesadillas</li>
-                                      </ul>
-                                    </p>
-                                  </div>
-                                  <div class="col">
-                                    <h5 class="card-title"><strong>Locations</strong></h5>
-                                    <p class="card-text">
-                                      <ul>
-                                        <li>Bakersfield, United States</li>
-                                        <li>Miami, United States</li>
-                                        <li>New York City, United States</li>
-                                      </ul>
-                                    </p>
-                                  </div>
-                                </div>
+                                <p class="card-text">Click on one of these hot hashtags that are trending worldwide right now</p>
+                                <p class="card-text">
+                                  <ul>
+                                    <?php
+                                    $url = "https://tagdef.com/en/";
+                                    $ch = curl_init();
+                                    $timeout = 5;
+                                    curl_setopt($ch, CURLOPT_URL, $url);
+                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+                                    $html = curl_exec($ch);
+                                    curl_close($ch);
+
+                                    // Create a DOM parser object
+                                    $dom = new DOMDocument();
+                                    @$dom->loadHTML($html);
+
+                                    // Iterate over all the <ul> tags
+                                    $tags = $dom->getElementsByTagName('ul');
+                                    $array = explode('#',$tags[4]->nodeValue);
+                                    foreach (array_filter($array) as $key => $value) {
+                                        echo "<li class='trending_topic'>#" . $value . "</li>";
+                                    }
+                                    ?>
+                                  </ul>
+                                </p>
                             </div>
                         </div>
                         <br>
@@ -290,6 +293,12 @@ if (!$auth->isLogged()) {
                     console.error("Request: "+JSON.stringify(request));
                 }
             });
+        })
+
+        $('.trending_topic').on('click', function() {
+            $('#keyword').focus();
+            $('#keyword').val($(this).text());
+            $('#location').focus();
         })
 
         // Cities are included in cities.js above

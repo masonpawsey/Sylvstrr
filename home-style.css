@@ -235,6 +235,10 @@ nav a {
   display: none;
 }
 
+.trending_topic:hover {
+  cursor: pointer
+}
+
 ul {
     padding: 0;
     list-style-type: none;
