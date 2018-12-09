@@ -13,6 +13,6 @@ $auth = new PHPAuth($dbh, $config);
 
 $auth->logout($_SESSION['hash']);
 session_destroy();
-header("Location: ../");
+header("Location: index.php");
 die('You have been logged out');
 ?>
