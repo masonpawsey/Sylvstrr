@@ -13,3 +13,5 @@
 - [ ] Favicon
 
 - [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
+
+- [ ] Login button doesn't reset from :focus(?) when login fails
