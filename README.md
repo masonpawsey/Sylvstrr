@@ -1,13 +1,15 @@
 # 4910-Senior-Project-Fall-2018
 
-- [x] Add quotes around the keywords so it searches for the full query e.g. "taco bell"
-
-- [ ] Red highlight around the phrase "taco bell" and also "tacobell" 
-
-- [ ] Stylize the results
-
 - [x] User accounts
 
-- [ ] Move away from Material style buttons
+- [x] Pull passwords out and store them in a `.gitignore` file
 
-- [ ] Pull passwords out and store them in a `.gitignore` file
+- [ ] 404 redirections
+
+- [ ] Reset password function
+
+- [ ] User analytics
+
+- [ ] Favicon
+
+- [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
