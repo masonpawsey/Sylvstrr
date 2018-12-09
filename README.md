@@ -9,3 +9,5 @@
 - [ ] Reset password function
 
 - [ ] User analytics
+
+- [ ] Favicon
