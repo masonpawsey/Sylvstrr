@@ -19,3 +19,5 @@
 - [x] Authenticate search.php
 
 - [ ] Track users searches
+
+- [ ] HTTPS
