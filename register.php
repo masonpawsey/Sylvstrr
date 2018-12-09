@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'vendor/autoload.php';
 
 use PHPAuth\Config as PHPAuthConfig;
