@@ -244,6 +244,10 @@ ul {
     list-style-type: none;
 }
 
+.highlight {
+  color: red;
+}
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;

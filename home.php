@@ -135,9 +135,9 @@ if (!$auth->isLogged()) {
                             <div class="card-body">
                                 <div class="row">
                                   <div class="col">
-                                    <h5 class="card-title"><strong>Map for <u>Tacos</u> in <u>Bakersfield, United States</u></strong></h5>
+                                    <h5 class="card-title map-title"></h5>
                                   </div>
-                                  <div class="col text-right">
+                                  <div class="col text-right share d-none">
                                     <a href="#"><i class="fas fa-arrow-circle-up"></i> Share</a>
                                   </div>
                                 </div>
@@ -278,15 +278,19 @@ if (!$auth->isLogged()) {
 
         $('#search_form').on('submit', function(e) {
             e.preventDefault();
+            var keyword = $('#keyword').val();
+            var location = $('#location').val();
             $.ajax({
                 url : 'search.php',
                 type : 'POST',
                 data : {
-                    'keyword' : $('#keyword').val(),
-                    'location' : $('#location').val()
+                    'keyword' : keyword,
+                    'location' : location
                 },
                 success : function(data) {              
                     $('#debug').html(JSON.parse(data));
+                    $('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
+                    $('.share').removeClass('d-none');
                 },
                 error : function(request,error)
                 {
