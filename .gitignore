@@ -3,3 +3,5 @@ tweets/
 node_modules/
 npm-debug.log
 *.csv
+vendor/
+credentials.php
