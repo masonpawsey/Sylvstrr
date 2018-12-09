@@ -87,7 +87,7 @@ if (!$auth->isLogged()) {
                             </li>
                         </ul>
                     </div>
-                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">
+                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://randomuser.me/api/portraits/men/<?php echo rand(0,10);?>.jpg" alt="">
                   <li class="nav-item dropdown" style="list-style: none;">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php echo $auth->getCurrentUser()['email']; ?>
