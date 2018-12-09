@@ -108,7 +108,7 @@ if (!$auth->isLogged()) {
                                 <h5 class="card-title"><strong>New search</strong></h5>
                                 <div class="row">
                                     <div class="col-md-12 col-lg-5 input-effect">
-                                    	<form action="search.php" method="POST">
+                                    	<form id="search_form">
                                         <div class="md-form">
                                             <input type="text" autocomplete="off" id="keyword" name="keyword" class="form-control">
                                             <label for="keyword" class="float-up keyword-label">Keywords</label>
@@ -218,12 +218,7 @@ if (!$auth->isLogged()) {
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Debug</strong></h5>
-                                <pre>
-                                	<?php
-                                	// print_r($_SESSION['hash']);
-                                	print_r($auth->getCurrentUser()['email']);
-                                	?>
-                                </pre>
+                                <pre id="debug"></pre>
                             </div>
                         </div>
                     </div>
@@ -277,6 +272,25 @@ if (!$auth->isLogged()) {
             $('.help').removeClass("d-block");
             $('.help').addClass("d-none");
         });
+
+        $('#search_form').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url : 'search.php',
+                type : 'POST',
+                data : {
+                    'keyword' : $('#keyword').val(),
+                    'location' : $('#location').val()
+                },
+                success : function(data) {              
+                    $('#debug').html(JSON.parse(data));
+                },
+                error : function(request,error)
+                {
+                    console.error("Request: "+JSON.stringify(request));
+                }
+            });
+        })
 
         // Cities are included in cities.js above
         $("#location").autocomplete({
