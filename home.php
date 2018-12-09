@@ -108,6 +108,7 @@ if (!$auth->isLogged()) {
                                 <h5 class="card-title"><strong>New search</strong></h5>
                                 <div class="row">
                                     <div class="col-md-12 col-lg-5 input-effect">
+                                    	<form action="search.php" method="POST">
                                         <div class="md-form">
                                             <input type="text" autocomplete="off" id="keyword" name="keyword" class="form-control">
                                             <label for="keyword" class="float-up keyword-label">Keywords</label>
@@ -123,6 +124,7 @@ if (!$auth->isLogged()) {
                                     <div class="col-md-12 col-lg-2">
                                         <div class="md-form">
                                             <input type="submit" class="btn btn-hollow">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
