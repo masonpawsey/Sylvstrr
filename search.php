@@ -56,7 +56,22 @@ if($statement->errorInfo()[0] != "00000") {
 $keyword = "'".$_POST['keyword']."'";
 $session_id = $_SESSION['id'];
 
+
+
+//
+//
+//
+//
+//
 // Add this query to the users records in the database
+//
+//
+//
+//
+//
+//
+
+
 
 // Run this script as sudo because we hate security :)
 // (and because ./scrape-twitter is protected and www-data can't get to it)
@@ -68,7 +83,14 @@ $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class
 // Check for the keyword without spaces
 $keyword = str_replace(' ', '', $keyword);
 $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
-print_r(json_encode($result));
+
+
+// The array we return holds the result as well as coordinates for the location
+// they passed so we can update the map on home.php
+$return = [$result, [$longitude, $latitude]];
+
+
+print_r(json_encode($return));
 
 $dbh = null;
 

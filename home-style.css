@@ -248,6 +248,16 @@ ul {
   color: red;
 }
 
+.submit-loader {
+  text-align: center;
+  display: inline-block;
+  opacity: 1;
+  vertical-align: middle;
+}
+
+svg path, svg rect { fill: #4285F4; }
+.btn-hollow:hover svg path, svg rect { fill: #fff; }
+
 @media(min-width:768px) {
   #wrapper {
     padding-left: 0;
