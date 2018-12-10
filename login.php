@@ -30,7 +30,5 @@ $auth = new PHPAuth($dbh, $config);
 $login = $auth->login($_POST['email'], $_POST['password']);
 // Check for errors on registration attempt
 print_r(json_encode($login));
-if($login['error'] === false) {
-	$_SESSION['hash'] = $login['hash'];
-}
+$_SESSION['hash'] = $login['hash'];
 ?>
