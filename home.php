@@ -51,7 +51,13 @@ if (!$auth->isLogged()) {
                     </a>
                 </li>
                 <li>
-                    <a href="#">Dashboard</a>
+                    <a href="home.php">Dashboard</a>
+                </li>
+                <li>
+                    <a href="history.php">Query history</a>
+                </li>
+                <li>
+                    <a href="profile.php">Profile</a>
                 </li>
             </ul>
         </div>
