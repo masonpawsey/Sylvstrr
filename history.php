@@ -157,6 +157,7 @@ if (!$auth->isLogged()) {
                                                 <th>Keyword</th>
                                                 <th>Location</th>
                                                 <th>Time</th>
+                                                <th>Sentiment</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -174,10 +175,12 @@ if (!$auth->isLogged()) {
                                                     $most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
                                                     foreach ($most_recent_queries as $key => $value) {
                                                         $time = date("M d, Y, h:i:s a", strtotime($value['time']));
+                                                        $sentiment = ['<i class="fas fa-arrow-up"></i> <span class="text-success">positive</span>', '<i class="fas fa-arrow-down"></i> <span class="text-danger">negative</span>', '<i class="fas fa-arrow-right"></i> <span class="text-dark">neutral</span>'][rand(0,2)];
                                                         echo "<tr>
                                                             <td>".$value['keyword']."</td>
                                                             <td>".$value['location']."</td>
-                                                            <td>".$time."</td></tr>";
+                                                            <td>".$time."</td>
+                                                            <td>".$sentiment."</td></tr>";
 
                                                     }
                                                 }
