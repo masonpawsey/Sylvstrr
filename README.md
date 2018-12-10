@@ -1,5 +1,7 @@
 # 4910-Senior-Project-Fall-2018
 
+- [ ] !!! Recent searches not working with < 3 searches
+
 - [ ] 404 redirections
 
 - [ ] Reset password function
