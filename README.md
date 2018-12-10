@@ -1,12 +1,10 @@
 # 4910-Senior-Project-Fall-2018
 
-- [x] User accounts
-
-- [x] Pull passwords out and store them in a `.gitignore` file
-
 - [ ] 404 redirections
 
 - [ ] Reset password function
+
+- [ ] User stats page (more recent searches, most popular keyword & location)
 
 - [ ] User analytics
 
@@ -16,8 +14,12 @@
 
 - [ ] Login button doesn't reset from :focus(?) when login fails
 
+- [ ] HTTPS
+
 - [x] Authenticate search.php
 
 - [x] Track users searches
 
-- [ ] HTTPS
+- [x] User accounts
+
+- [x] Pull passwords out and store them in a `.gitignore` file
