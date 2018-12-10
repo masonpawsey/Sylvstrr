@@ -112,7 +112,11 @@ if (!$auth->isLogged()) {
     </div>
     <script>
     $(document).ready(function() {
-        
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+            $('.navbar-collapse').toggleClass("padded");
+        });
     });
     </script>
 </body>
