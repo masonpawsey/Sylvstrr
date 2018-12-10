@@ -209,7 +209,7 @@ if (!$auth->isLogged()) {
                                                 <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[0]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[0]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[0]['time']; ?>
                                               </div>
                                               <div class="col-4">
-                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                               </div>
                                             </div>
                                             <br>
@@ -218,7 +218,7 @@ if (!$auth->isLogged()) {
                                                 <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[1]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[1]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[1]['time']; ?>
                                               </div>
                                               <div class="col-4">
-                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                               </div>
                                             </div>
                                             <br>
@@ -227,7 +227,7 @@ if (!$auth->isLogged()) {
                                                 <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[2]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[2]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[2]['time']; ?>
                                               </div>
                                               <div class="col-4">
-                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                               </div>
                                             </div>
 
@@ -337,7 +337,7 @@ if (!$auth->isLogged()) {
                                       <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][0]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][0]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][0]['time']+`
                                     </div>
                                     <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                     </div>
                                   </div>
                                   <br>
@@ -346,7 +346,7 @@ if (!$auth->isLogged()) {
                                       <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][1]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][1]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][1]['time']+`
                                     </div>
                                     <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                     </div>
                                   </div>
                                   <br>
@@ -355,7 +355,7 @@ if (!$auth->isLogged()) {
                                       <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][2]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][2]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][2]['time']+`
                                     </div>
                                     <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
                                     </div>
                                   </div>`
                     $('.recent-searches').html(recent_search);
