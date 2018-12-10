@@ -199,36 +199,48 @@ if (!$auth->isLogged()) {
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Your recent searches</strong></h5>
-                                <!-- <p class="card-text">We'll keep track of your searches right here so you can come back and reference them</p> -->
-                                <p class="card-text">
-                                  <div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> Tacos <br><i class="fas fa-map-marker"></i> Bakersfield, United States <br><i class="fas fa-clock"></i> 9 Dec 2018 1:12 am
+                                <div class="card-text recent-searches">
+                                    <?php
+                                    // Load this first from the server, then let search.php take over to keep it updated
+                                    $statement = $dbh->prepare('SELECT `time`, keyword, location FROM queries WHERE uid = :uid ORDER BY `time` DESC LIMIT 3');
+                                    $statement->execute([
+                                        'uid' => $auth->getCurrentUser()['uid']
+                                    ]);
+                                    // Print errors, if they exist
+                                    if($statement->errorInfo()[0] != "00000") {
+                                        print_r($statement->errorInfo());
+                                        die();
+                                    } else {
+                                        $most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                    }
+                                    ?>
+                                    <div class="row">
+                                      <div class="col-8">
+                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[0]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[0]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[0]['time']; ?>
+                                      </div>
+                                      <div class="col-4">
+                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      </div>
                                     </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-8">
+                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[1]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[1]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[1]['time']; ?>
+                                      </div>
+                                      <div class="col-4">
+                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> Burritos <br><i class="fas fa-map-marker"></i> Bakersfield, United States <br><i class="fas fa-clock"></i> 9 Dec 2018 1:10 am
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-8">
+                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[2]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[2]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[2]['time']; ?>
+                                      </div>
+                                      <div class="col-4">
+                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                      </div>
                                     </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                    </div>
-                                  </div>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> Quesadillas <br><i class="fas fa-map-marker"></i> Bakersfield, United States <br><i class="fas fa-clock"></i> 9 Dec 2018 1:08 am
-                                    </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                    </div>
-                                  </div>
-                                  <br>
-                                </p>
+                                </div>
                             </div>
                             <div class="card-footer text-right">
                               <small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small>
@@ -299,23 +311,53 @@ if (!$auth->isLogged()) {
             var location = $('#location').val();
             $('.submit-loader').toggleClass('d-none');
             $.ajax({
-                url : 'search.php',
-                type : 'POST',
-                data : {
+                url: 'search.php',
+                type: 'POST',
+                data: {
                     'keyword' : keyword,
                     'location' : location
                 },
-                success : function(data) {              
+                success: function(data) {              
                     $('#debug').html(JSON.parse(data)[0]);
                     $('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
                     $('.share').removeClass('d-none');
                     $('.submit-loader').toggleClass('d-none');
+                    $('#keyword').val('').blur();
+                    $('#location').val('').blur();
                     map.flyTo({
                         center: {lng: JSON.parse(data)[1][0], lat: JSON.parse(data)[1][1]},
-                        zoom: 6
+                        zoom: 7
                     });
+
+                    var recent_search = `<div class="row">
+                                    <div class="col-8">
+                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][0]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][0]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][0]['time']+`
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div class="row">
+                                    <div class="col-8">
+                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][1]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][1]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][1]['time']+`
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div class="row">
+                                    <div class="col-8">
+                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][2]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][2]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][2]['time']+`
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                    </div>
+                                  </div>`
+                    $('.recent-searches').html(recent_search);
                 },
-                error : function(request,error)
+                error: function(request,error)
                 {
                     console.error("Request: "+JSON.stringify(request));
                 }

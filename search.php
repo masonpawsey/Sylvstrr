@@ -54,24 +54,34 @@ if($statement->errorInfo()[0] != "00000") {
 // The passed keywords (our query doesn't care how this is formatted -
 // so spaces will separate the keywords)
 $keyword = "'".$_POST['keyword']."'";
-$session_id = $_SESSION['id'];
 
+// Add this query to our table of queries
+$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location);');
+$statement->execute([
+	'uid' => $auth->getCurrentUser()['uid'],
+	'ip' => $_SERVER['REMOTE_ADDR'],
+	'agent' => $_SERVER['HTTP_USER_AGENT']??null,
+	'keyword' => $_POST['keyword'],
+	'location' => $_POST['location']
+]);
+// Print errors, if they exist
+if($statement->errorInfo()[0] != "00000") {
+	print_r($statement->errorInfo());
+	die();
+}
 
-
-//
-//
-//
-//
-//
-// Add this query to the users records in the database
-//
-//
-//
-//
-//
-//
-
-
+// Get most recent queries
+$statement = $dbh->prepare('SELECT `time`, keyword, location FROM queries WHERE uid = :uid ORDER BY `time` DESC LIMIT 3');
+$statement->execute([
+	'uid' => $auth->getCurrentUser()['uid']
+]);
+// Print errors, if they exist
+if($statement->errorInfo()[0] != "00000") {
+	print_r($statement->errorInfo());
+	die();
+} else {
+	$most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Run this script as sudo because we hate security :)
 // (and because ./scrape-twitter is protected and www-data can't get to it)
@@ -84,11 +94,9 @@ $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class
 $keyword = str_replace(' ', '', $keyword);
 $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
 
-
-// The array we return holds the result as well as coordinates for the location
-// they passed so we can update the map on home.php
-$return = [$result, [$longitude, $latitude]];
-
+// The array we return holds the resulting Tweets as well as coordinates for the location
+// they passed so we can update the map on home.php, and their most recent searches
+$return = [$result, [$longitude, $latitude], $most_recent_queries];
 
 print_r(json_encode($return));
 
