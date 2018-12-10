@@ -67,7 +67,7 @@ if (!$auth->isLogged()) {
             <header>
                 <!-- Fixed navbar -->
                 <nav class="navbar navbar-expand fixed-top">
-                    <a class="navbar-brand" href="#">sylvester</a>
+                    <a class="navbar-brand" href="home.php">sylvester</a>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
