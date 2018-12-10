@@ -199,39 +199,55 @@ if (!$auth->isLogged()) {
                                         die();
                                     } else {
                                         $most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                        if(empty($most_recent_queries)) {
+                                            echo "<p class='card-text'>We'll keep track of your query history here. Make a query and watch the magic!</p>";
+                                        } else {
+                                            ?>
+
+                                            <div class="row">
+                                              <div class="col-8">
+                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[0]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[0]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[0]['time']; ?>
+                                              </div>
+                                              <div class="col-4">
+                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                              <div class="col-8">
+                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[1]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[1]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[1]['time']; ?>
+                                              </div>
+                                              <div class="col-4">
+                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                              <div class="col-8">
+                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[2]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[2]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[2]['time']; ?>
+                                              </div>
+                                              <div class="col-4">
+                                                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                              </div>
+                                            </div>
+
+                                            <?php
+                                        }
                                     }
                                     ?>
-                                    <div class="row">
-                                      <div class="col-8">
-                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[0]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[0]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[0]['time']; ?>
-                                      </div>
-                                      <div class="col-4">
-                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                      </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                      <div class="col-8">
-                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[1]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[1]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[1]['time']; ?>
-                                      </div>
-                                      <div class="col-4">
-                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                      </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                      <div class="col-8">
-                                        <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[2]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[2]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[2]['time']; ?>
-                                      </div>
-                                      <div class="col-4">
-                                        <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                      </div>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="card-footer text-right">
-                              <small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small>
-                            </div>
+                            <?php
+                                if(!empty($most_recent_queries)) {
+                            ?>
+
+                                <div class="card-footer text-right">
+                                  <a href="history.php"><small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small></a>
+                                </div>
+
+                            <?php
+                                }
+                            ?>
                         </div>
                         <br>
                         <div class="card">

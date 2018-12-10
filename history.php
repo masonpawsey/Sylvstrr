@@ -38,6 +38,10 @@ if (!$auth->isLogged()) {
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="home-style.css">
     <script type="text/javascript" src="cities.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
 
 <body>
@@ -90,10 +94,90 @@ if (!$auth->isLogged()) {
             <!-- Begin page content -->
             <main role="main" class="container-fluid">
                 <div class="row" style="margin-top: 60px">
+                    <div class="col-sm-2"></div>
                     <div class="col-sm-8">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Your history</strong></h5>
+                                <p class="card-text">Here is a log of all your queries. <br>
+                                <?php
+                                $statement = $dbh->prepare("SELECT keyword, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY keyword ORDER BY magnitude DESC LIMIT 1");
+                                $statement->execute([
+                                    'uid' => $auth->getCurrentUser()['uid']
+                                ]);
+                                // Print errors, if they exist
+                                if($statement->errorInfo()[0] != "00000") {
+                                    print_r($statement->errorInfo());
+                                    die();
+                                } else {
+                                    $most_frequent_keyword = $statement->fetch(PDO::FETCH_ASSOC);
+                                    // print_r($most_frequent_keyword);
+                                }
+                                ?>
+                                Your most frequent keyword is: <strong><?php echo $most_frequent_keyword['keyword']; ?></strong>. You've searched for it <strong>
+                                <?php
+                                echo $most_frequent_keyword['magnitude'];
+                                if($most_frequent_keyword['magnitude'] > 1) {
+                                    echo " times.";
+                                } else {
+                                    echo " time.";
+                                }
+                                ?></strong><br>
+                                <?php
+                                $statement = $dbh->prepare("SELECT location, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY location ORDER BY magnitude DESC LIMIT 1");
+                                $statement->execute([
+                                    'uid' => $auth->getCurrentUser()['uid']
+                                ]);
+                                // Print errors, if they exist
+                                if($statement->errorInfo()[0] != "00000") {
+                                    print_r($statement->errorInfo());
+                                    die();
+                                } else {
+                                    $most_frequent_location = $statement->fetch(PDO::FETCH_ASSOC);
+                                }
+                                ?>
+                                Your most frequent location is: <strong><?php echo $most_frequent_location['location']; ?></strong>. You've searched for it <strong>
+                                <?php
+                                echo $most_frequent_location['magnitude'];
+                                if($most_frequent_location['magnitude'] > 1) {
+                                    echo " times.";
+                                } else {
+                                    echo " time.";
+                                }
+                                ?></strong>
+                                <table id="table" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Keyword</th>
+                                                <th>Location</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                // Get the users searches!
+                                                $statement = $dbh->prepare("SELECT keyword, location, CONVERT_TZ(`time`,'+00:00','-08:00') as `time` FROM queries WHERE uid = :uid ORDER BY `time` DESC");
+                                                $statement->execute([
+                                                    'uid' => $auth->getCurrentUser()['uid']
+                                                ]);
+                                                // Print errors, if they exist
+                                                if($statement->errorInfo()[0] != "00000") {
+                                                    print_r($statement->errorInfo());
+                                                    die();
+                                                } else {
+                                                    $most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                                    foreach ($most_recent_queries as $key => $value) {
+                                                        $time = date("M d, Y, h:i:s a", strtotime($value['time']));
+                                                        echo "<tr>
+                                                            <td>".$value['keyword']."</td>
+                                                            <td>".$value['location']."</td>
+                                                            <td>".$time."</td></tr>";
+
+                                                    }
+                                                }
+                                                ?>
+                                        </tbody>
+                                    </table>
                             </div>
                         </div>
                     </div>
@@ -105,13 +189,16 @@ if (!$auth->isLogged()) {
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col-6 text-right">Team Sylvester</div>
+                  <div class="col text-right">Team Sylvester</div>
                 </div>
             </div>
         </footer>
     </div>
     <script>
     $(document).ready(function() {
+        $('#table').DataTable({
+            "order": [[ 2, "desc" ]]
+        });
         $("#menu-toggle").click(function(e) {
             e.preventDefault();
             $("#wrapper").toggleClass("toggled");

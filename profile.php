@@ -105,7 +105,7 @@ if (!$auth->isLogged()) {
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col-6 text-right">Team Sylvester</div>
+                  <div class="col text-right">Team Sylvester</div>
                 </div>
             </div>
         </footer>
