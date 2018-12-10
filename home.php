@@ -146,7 +146,6 @@ if (!$auth->isLogged()) {
                                     <a href="#"><i class="fas fa-arrow-circle-up"></i> Share</a>
                                   </div>
                                 </div>
-                              </h5>
                               <div id="map" style="height: 58vh"></div>
                             </div>
                         </div>
