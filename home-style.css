@@ -57,6 +57,17 @@ nav a {
   transition: all 0.5s ease;
 }
 
+.dataTables_filter {
+  width: 50%;
+  display: inline;
+  float: right;
+}
+
+.dt-buttons {
+  width: 50%;
+  display: inline-block;
+}
+
 #wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
@@ -230,6 +241,10 @@ nav a {
   border: #4285F4 1px solid !important;
   color: #ffffff !important;
   background: #4285F4 !important;
+}
+
+.dt-button.btn-hollow {
+  line-height: 15px !important;
 }
 
 .mapboxgl-ctrl-bottom-right {
