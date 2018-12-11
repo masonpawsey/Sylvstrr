@@ -105,7 +105,6 @@ if (!$auth->isLogged()) {
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Your history</strong></h5>
-                                <p class="card-text">Here is a log of all your queries. <br>
                                 <?php
                                 $statement = $dbh->prepare("SELECT keyword, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY keyword ORDER BY magnitude DESC LIMIT 1");
                                 $statement->execute([
@@ -119,38 +118,45 @@ if (!$auth->isLogged()) {
                                     $most_frequent_keyword = $statement->fetch(PDO::FETCH_ASSOC);
                                     // print_r($most_frequent_keyword);
                                 }
+                                if(empty($most_frequent_keyword)) {
+                                    echo "<p class='card-text'>This is where we'll keep track of all your queries. <a href='home.php'>Go here</a> and make a query!</p>";
+                                } else {
+                                ?>  <p class="card-text">Here is a log of all your queries. <br>
+                                    Your most frequent keyword is: <strong><?php echo $most_frequent_keyword['keyword']; ?></strong>. You've searched for it <strong>
+                                    <?php
+                                    echo $most_frequent_keyword['magnitude'];
+                                    if($most_frequent_keyword['magnitude'] > 1) {
+                                        echo " times.";
+                                    } else {
+                                        echo " time.";
+                                    }
+                                    ?></strong><br>
+                                    <?php
+                                    $statement = $dbh->prepare("SELECT location, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY location ORDER BY magnitude DESC LIMIT 1");
+                                    $statement->execute([
+                                        'uid' => $auth->getCurrentUser()['uid']
+                                    ]);
+                                    // Print errors, if they exist
+                                    if($statement->errorInfo()[0] != "00000") {
+                                        print_r($statement->errorInfo());
+                                        die();
+                                    } else {
+                                        $most_frequent_location = $statement->fetch(PDO::FETCH_ASSOC);
+                                    }
+                                    ?>
+                                    Your most frequent location is: <strong><?php echo $most_frequent_location['location']; ?></strong>. You've searched for it <strong>
+                                    <?php
+                                    echo $most_frequent_location['magnitude'];
+                                    if($most_frequent_location['magnitude'] > 1) {
+                                        echo " times.";
+                                    } else {
+                                        echo " time.";
+                                    }
+                                    ?></strong>
+                                <?php 
+                                // End the 'else' leg of the above condition. The above will only print if the user has made a query
+                                } 
                                 ?>
-                                Your most frequent keyword is: <strong><?php echo $most_frequent_keyword['keyword']; ?></strong>. You've searched for it <strong>
-                                <?php
-                                echo $most_frequent_keyword['magnitude'];
-                                if($most_frequent_keyword['magnitude'] > 1) {
-                                    echo " times.";
-                                } else {
-                                    echo " time.";
-                                }
-                                ?></strong><br>
-                                <?php
-                                $statement = $dbh->prepare("SELECT location, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY location ORDER BY magnitude DESC LIMIT 1");
-                                $statement->execute([
-                                    'uid' => $auth->getCurrentUser()['uid']
-                                ]);
-                                // Print errors, if they exist
-                                if($statement->errorInfo()[0] != "00000") {
-                                    print_r($statement->errorInfo());
-                                    die();
-                                } else {
-                                    $most_frequent_location = $statement->fetch(PDO::FETCH_ASSOC);
-                                }
-                                ?>
-                                Your most frequent location is: <strong><?php echo $most_frequent_location['location']; ?></strong>. You've searched for it <strong>
-                                <?php
-                                echo $most_frequent_location['magnitude'];
-                                if($most_frequent_location['magnitude'] > 1) {
-                                    echo " times.";
-                                } else {
-                                    echo " time.";
-                                }
-                                ?></strong>
                                 <table id="table" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                             <tr>

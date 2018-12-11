@@ -271,6 +271,11 @@ ul {
   vertical-align: middle;
 }
 
+.w-20-px {
+  width: 20px;
+  text-align: center;
+}
+
 svg path, svg rect { fill: #4285F4; }
 .btn-hollow:hover svg path, svg rect { fill: #fff; }
 

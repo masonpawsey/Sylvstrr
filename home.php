@@ -202,52 +202,30 @@ if (!$auth->isLogged()) {
                                         if(empty($most_recent_queries)) {
                                             echo "<p class='card-text'>We'll keep track of your query history here. Make a query and watch the magic!</p>";
                                         } else {
-                                            ?>
-
-                                            <div class="row">
-                                              <div class="col-8">
-                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[0]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[0]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[0]['time']; ?>
-                                              </div>
-                                              <div class="col-4">
-                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                              </div>
-                                            </div>
-                                            <br>
-                                            <div class="row">
-                                              <div class="col-8">
-                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[1]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[1]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[1]['time']; ?>
-                                              </div>
-                                              <div class="col-4">
-                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                              </div>
-                                            </div>
-                                            <br>
-                                            <div class="row">
-                                              <div class="col-8">
-                                                <i class="fas fa-keyboard"></i> <?php echo $most_recent_queries[2]['keyword']; ?> <br><i class="fas fa-map-marker"></i> <?php echo $most_recent_queries[2]['location']; ?><br><i class="fas fa-clock"></i> <?php echo $most_recent_queries[2]['time']; ?>
-                                              </div>
-                                              <div class="col-4">
-                                                <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                              </div>
-                                            </div>
-
-                                            <?php
+                                            foreach ($most_recent_queries as $key => $value) {
+                                                ?>
+                                                <div class="row">
+                                                  <div class="col-8">
+                                                    <i class="w-20-px fas fa-keyboard"></i> <?php echo $value['keyword']; ?> <br><i class="w-20-px fas fa-map-marker"></i> <?php echo $value['location']; ?><br><i class="w-20-px fas fa-clock"></i> <?php echo $value['time']; ?>
+                                                  </div>
+                                                  <div class="col-4">
+                                                    <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                                  </div>
+                                                </div>
+                                                <?php
+                                                // Don't print a break on the last row
+                                                if($key+1 != count($most_recent_queries)) {
+                                                    echo "<br>";
+                                                }
+                                            }
                                         }
                                     }
                                     ?>
                                 </div>
                             </div>
-                            <?php
-                                if(!empty($most_recent_queries)) {
-                            ?>
-
-                                <div class="card-footer text-right">
-                                  <a href="history.php"><small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small></a>
-                                </div>
-
-                            <?php
-                                }
-                            ?>
+                            <div class="card-footer recent-searches-card-footer text-right <?php if(empty($most_recent_queries)) { echo "d-none"; } ?>">
+                              <a href="history.php"><small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small></a>
+                            </div>
                         </div>
                         <br>
                         <div class="card">
@@ -324,41 +302,30 @@ if (!$auth->isLogged()) {
                     $('#debug').html(JSON.parse(data)[0]);
                     $('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
                     $('.share').removeClass('d-none');
+                    $('.recent-searches-card-footer').removeClass('d-none');
                     $('.submit-loader').toggleClass('d-none');
                     $('#keyword').val('').blur();
                     $('#location').val('').blur();
+                    var recent_searches_html = '';
+                    JSON.parse(data)[2].forEach(function(item, i) {
+                        recent_searches_html += `<div class="row">
+                          <div class="col-8">
+                            <i class="w-20-px fas fa-keyboard"></i> ` + item['keyword'] + ` <br><i class="w-20-px fas fa-map-marker"></i> ` + item['location'] + `<br><i class="w-20-px fas fa-clock"></i> ` + item['time'] + `
+                          </div>
+                          <div class="col-4">
+                            <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                          </div>
+                        </div>`
+                        // Don't print a break on the last row
+                        if(i+1 != JSON.parse(data)[2].length) {
+                            recent_searches_html += "<br>";
+                        }
+                    });
+                    $('.recent-searches').html(recent_searches_html);
                     map.flyTo({
                         center: {lng: JSON.parse(data)[1][0], lat: JSON.parse(data)[1][1]},
                         zoom: 7
                     });
-
-                    var recent_search = `<div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][0]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][0]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][0]['time']+`
-                                    </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                    </div>
-                                  </div>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][1]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][1]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][1]['time']+`
-                                    </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                    </div>
-                                  </div>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-8">
-                                      <i class="fas fa-keyboard"></i> `+ JSON.parse(data)[2][2]['keyword'] +` <br><i class="fas fa-map-marker"></i> `+JSON.parse(data)[2][2]['location'] +`<br><i class="fas fa-clock"></i> `+JSON.parse(data)[2][2]['time']+`
-                                    </div>
-                                    <div class="col-4">
-                                      <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
-                                    </div>
-                                  </div>`
-                    $('.recent-searches').html(recent_search);
                 },
                 error: function(request,error)
                 {
