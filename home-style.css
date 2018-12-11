@@ -276,6 +276,18 @@ ul {
   text-align: center;
 }
 
+.profile-picture {
+  border: 8px white solid;
+  height: 256px;
+  position: relative;
+  margin: -128px auto 0 auto;
+  display: block;
+}
+
+.header-picture:hover, .profile-picture:hover {
+  cursor: pointer;
+}
+
 svg path, svg rect { fill: #4285F4; }
 .btn-hollow:hover svg path, svg rect { fill: #fff; }
 
