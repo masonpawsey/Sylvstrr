@@ -127,8 +127,8 @@ if (!$auth->isLogged()) {
                                 <div class="row">
                                     <div class="col-md-12 input-effect">
                                         <div class="md-form">
-                                            <input type="email" autocomplete="off" id="email" name="email" class="form-control">
-                                            <label for="email" class="float-up">Email</label>
+                                            <input type="email" autocomplete="off" id="email" name="email" class="form-control" value="<?php echo $auth->getCurrentUser()['email']; ?>">
+                                            <label for="email" class="float-up <?php if($auth->getCurrentUser()['email']){echo "active"; } ?>">Email</label>
                                         </div>
                                     </div>
                                 </div>
