@@ -5,3 +5,4 @@ npm-debug.log
 *.csv
 vendor/
 credentials.php
+assets/
