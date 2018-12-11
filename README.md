@@ -1,14 +1,8 @@
 # 4910-Senior-Project-Fall-2018
 
-- [ ] !!! Recent searches not working with < 3 searches
-
 - [ ] 404 redirections
 
 - [ ] Reset password function
-
-- [ ] User stats page (more recent searches, most popular keyword & location)
-
-- [ ] User analytics
 
 - [ ] Favicon
 
@@ -17,6 +11,16 @@
 - [ ] Login button doesn't reset from :focus(?) when login fails
 
 - [ ] HTTPS
+
+- [ ] 2FA
+
+- [x] User stats page (more recent searches, most popular keyword & location)
+
+- [x] User stats page (more recent searches, most popular keyword & location)
+
+- [x] User analytics
+
+- [x] Recent searches not working with < 3 searches
 
 - [x] Authenticate search.php
 
