@@ -28,6 +28,16 @@ $config = new PHPAuthConfig($dbh);
 $auth = new PHPAuth($dbh, $config);
 
 $login = $auth->login($_POST['email'], $_POST['password']);
+
+// Add user action to log
+$statement = $dbh->prepare('INSERT INTO user_log (uid, ip, agent, `time`, action) VALUES (:uid, :ip, :agent, NOW(), :action)');
+$statement->execute([
+    'uid' => $auth->getCurrentUser()['uid'],
+    'ip' => $_SERVER['REMOTE_ADDR'],
+    'agent' => $_SERVER['HTTP_USER_AGENT']??null,
+    'action' => 'login.php'
+]);
+
 // Check for errors on registration attempt
 print_r(json_encode($login));
 $_SESSION['hash'] = $login['hash'];

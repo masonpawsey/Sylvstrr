@@ -15,6 +15,22 @@ if (!$auth->isLogged()) {
 	header("Location: index.php");
 	die('Forbidden');
 }
+
+// Add user action to log
+$statement = $dbh->prepare('INSERT INTO user_log (uid, ip, agent, `time`, action) VALUES (:uid, :ip, :agent, NOW(), :action)');
+$statement->execute([
+    'uid' => $auth->getCurrentUser()['uid'],
+    'ip' => $_SERVER['REMOTE_ADDR'],
+    'agent' => $_SERVER['HTTP_USER_AGENT']??null,
+    'action' => 'home.php'
+]);
+// Print errors, if they exist
+if($statement->errorInfo()[0] != "00000") {
+    print_r($statement->errorInfo());
+    die();
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
