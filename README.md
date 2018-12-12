@@ -12,9 +12,9 @@
 
 - [ ] HTTPS
 
-- [ ] 2FA
+- [ ] Include common headers into a `common.php` file
 
-- [x] User stats page (more recent searches, most popular keyword & location)
+- [ ] 2FA
 
 - [x] User stats page (more recent searches, most popular keyword & location)
 
