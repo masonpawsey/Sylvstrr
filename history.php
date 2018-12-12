@@ -106,7 +106,10 @@ if (!$auth->isLogged()) {
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Your history</strong></h5>
                                 <?php
-                                $statement = $dbh->prepare("SELECT keyword, COUNT(*) AS magnitude  FROM queries where uid = :uid GROUP BY keyword ORDER BY magnitude DESC LIMIT 1");
+                                $statement = $dbh->prepare("
+                                    SELECT keyword, COUNT(*) AS magnitude 
+                                    FROM queries where uid = :uid
+                                    GROUP BY keyword ORDER BY magnitude DESC LIMIT 1");
                                 $statement->execute([
                                     'uid' => $auth->getCurrentUser()['uid']
                                 ]);
