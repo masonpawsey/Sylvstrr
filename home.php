@@ -91,7 +91,7 @@ if($statement->errorInfo()[0] != "00000") {
                             </li>
                         </ul>
                     </div>
-                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://randomuser.me/api/portraits/men/<?php echo rand(0,10);?>.jpg" alt="">
+                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://media.licdn.com/dms/image/C5603AQEAmCS6ZYjupg/profile-displayphoto-shrink_800_800/0?e=1550102400&v=beta&t=U6TrOrwZ6hFBTgAwqzFDpk6aBkSKi_ZqsdM-twcWWRU" alt="">
                   <li class="nav-item dropdown" style="list-style: none;">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php echo $auth->getCurrentUser()['email']; ?>
@@ -225,7 +225,7 @@ if($statement->errorInfo()[0] != "00000") {
                                                     <i class="w-20-px fas fa-keyboard"></i> <?php echo $value['keyword']; ?> <br><i class="w-20-px fas fa-map-marker"></i> <?php echo $value['location']; ?><br><i class="w-20-px fas fa-clock"></i> <?php echo $value['time']; ?>
                                                   </div>
                                                   <div class="col-4">
-                                                    <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+                                                    <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View</button>
                                                   </div>
                                                 </div>
                                                 <?php

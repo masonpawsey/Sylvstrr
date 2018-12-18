@@ -95,7 +95,7 @@ $statement->execute([
                             </li>
                         </ul>
                     </div>
-                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://randomuser.me/api/portraits/men/<?php echo rand(0,10);?>.jpg" alt="">
+                    <img class="rounded-circle" style="width:35px; margin: 0 10px;" src="https://media.licdn.com/dms/image/C5603AQEAmCS6ZYjupg/profile-displayphoto-shrink_800_800/0?e=1550102400&v=beta&t=U6TrOrwZ6hFBTgAwqzFDpk6aBkSKi_ZqsdM-twcWWRU" alt="">
                   <li class="nav-item dropdown" style="list-style: none;">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php echo $auth->getCurrentUser()['email']; ?>
