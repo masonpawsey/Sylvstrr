@@ -1,5 +1,6 @@
 {
     "require": {
-        "phpauth/phpauth": "^1.1"
+        "phpauth/phpauth": "^1.1",
+        "twilio/sdk": "^5.27"
     }
 }
