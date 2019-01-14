@@ -6,3 +6,4 @@ npm-debug.log
 vendor/
 credentials.php
 assets/
+.DS_Store
