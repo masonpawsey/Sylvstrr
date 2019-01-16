@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use PHPAuth\Config as PHPAuthConfig;
 use PHPAuth\Auth as PHPAuth;
+use Twilio\Rest\Client;
 
 function return_result($result) {
 	die(json_encode($result));
@@ -27,20 +28,23 @@ $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
 $config = new PHPAuthConfig($dbh);
 $auth = new PHPAuth($dbh, $config);
 
+// If the user has a phone number in the database, they have 2FA login enabled
 $statement = $dbh->prepare("SELECT phone FROM phpauth_users WHERE email = :email");
 $statement->execute([
-    'email' => $_POST['email']
+	'email' => $_POST['email']
 ]);
 // Print errors, if they exist
 if($statement->errorInfo()[0] != "00000") {
-    return_result(array("error" => true, "title" => "Database error", "message" => $statement->errorInfo()));
-    die();
+	return_result(array("error" => true, "title" => "Database error", "message" => $statement->errorInfo()));
+	die();
 } else {
-    $phone = $statement->fetch(PDO::FETCH_ASSOC)['phone'];
+	// The phone number could be NULL or a 10-digit number
+	$phone = $statement->fetch(PDO::FETCH_ASSOC)['phone'];
 }
 
+// If a phone number exists for this user, verify the code we send
 if(isset($phone)) {
-	// send code, check back on login page
+	// Send code, check back on login page
 	if(strlen($_POST['code']) == 0) {
 		$verify_code = generateCode(4);
 		$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = :verify_code WHERE email = :email');
@@ -48,6 +52,10 @@ if(isset($phone)) {
 			'email' => $_POST['email'],
 			'verify_code' => $verify_code
 		]);
+		// Send the user the text
+		$client = new Client($account_sid, $auth_token);
+		$client->messages->create($phone, array( 'from' => $twilio_number, 'body' => 'Welcome to Sylvester! Verify your number with the code: ' + $verify_code));
+		// Show them the last 2 digits of the phone number we sent a code to
 		return_result(array("2fa" => true, "phone" => substr($phone, -2)));
 	} else {
 		// Check code
@@ -58,14 +66,16 @@ if(isset($phone)) {
 
 		$result = $statement->fetch(PDO::FETCH_ASSOC);
 
+		// If the code we stored is the same code they supplied, log them in
 		if($result['verify_code'] === $_POST['code']) {
 			login($auth, $dbh);
 		} else {
-			// Incorrect code
+		// Code mismatch, error out
 			return_result(array("error" => true, "title" => "Oops", "message" => "Email address / password are invalid."));
 		}
 	}
 } else {
+	// If a phone number doesn't exist for this user, check just their login
 	login($auth, $dbh);
 }
 

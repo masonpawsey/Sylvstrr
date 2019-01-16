@@ -21,14 +21,11 @@ $path = 'tweets/'.$_SESSION['id'];
 
 // Clear the 2fa verify_code upon successful login
 // If it doens't exist, it'll just stay NULL
-$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = NULL WHERE email = :email');
+$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = NULL WHERE id = :id');
 $statement->execute([
-	'email' => $_POST['email']
+	'id' => $auth->getCurrentUser()['uid']
 ]);
 
-// if (!is_dir($path)) {
-//     mkdir($path, 0777, true);
-// }
 ?>
 <html>
 <head>
@@ -284,9 +281,12 @@ $statement->execute([
 						// so, if `result['title']` doesn't exist, just print 'Error'
 						toastr.error(result['message'], result['title'] || 'Error');
 					} else if(result['2fa'] === true) {
+						// If we find out that the user has 2FA enabled, display the field
+						// for them to enter the code
 						toastr.success('A code has been sent to (xxx) xxx-xx' + result['phone'], 'Code sent!');
 						$("#code").inputmask({"mask": "9999", showMaskOnHover: false});
 						$('.2fa').show();
+						$('#code').focus();
 					} else {
 						window.location.href = "home.php";
 					}
