@@ -14,7 +14,7 @@
 
 - [ ] Include common headers into a `common.php` file
 
-- [ ] 2FA
+- [x] 2FA
 
 - [x] User stats page (more recent searches, most popular keyword & location)
 
