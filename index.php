@@ -19,6 +19,13 @@ if ($auth->isLogged()) {
 $_SESSION['id'] = uniqid();
 $path = 'tweets/'.$_SESSION['id'];
 
+// Clear the 2fa verify_code upon successful login
+// If it doens't exist, it'll just stay NULL
+$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = NULL WHERE email = :email');
+$statement->execute([
+	'email' => $_POST['email']
+]);
+
 // if (!is_dir($path)) {
 //     mkdir($path, 0777, true);
 // }
@@ -45,6 +52,7 @@ $path = 'tweets/'.$_SESSION['id'];
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	<script type="text/javascript" src="cities.js"></script>
 	<link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
 </head>
 
 <body>
@@ -85,10 +93,10 @@ $path = 'tweets/'.$_SESSION['id'];
 						</div>
 						<div class="col-md-12 col-lg-6 input-effect">
 							<div class="md-form">
-						    	<input type="text" autocomplete="off" class="form-control" name="location" id="location">
-						    	<label for="location" class="float-up location-label">Location</label>
-						    </div>
-					    </div>
+								<input type="text" autocomplete="off" class="form-control" name="location" id="location">
+								<label for="location" class="float-up location-label">Location</label>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -114,10 +122,16 @@ $path = 'tweets/'.$_SESSION['id'];
 						</div>
 						<div class="col-md-12 col-lg-6 input-effect">
 							<div class="md-form">
-						    	<input type="password" autocomplete="off" class="form-control" name="password" id="password">
-						    	<label for="password" class="float-up">Password</label>
-						    </div>
-					    </div>
+								<input type="password" autocomplete="off" class="form-control" name="password" id="password">
+								<label for="password" class="float-up">Password</label>
+							</div>
+						</div>
+						<div class="col-md-12 col-lg-6 input-effect 2fa" style="display: none">
+							<div class="md-form">
+								<input type="text" autocomplete="off" class="form-control" name="code" id="code">
+								<label for="code" class="float-up">Code</label>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -157,91 +171,91 @@ $path = 'tweets/'.$_SESSION['id'];
 
 	var map_locations = [{
 		// CSUB
-	    "id": "2",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-119.10506171751422,35.347574509536656],
-	        zoom: 14.75,
-	        pitch: 50
-	    }
+		"id": "2",
+		"camera": {
+			speed: 0.1,
+			center: [-119.10506171751422,35.347574509536656],
+			zoom: 14.75,
+			pitch: 50
+		}
 	}, {
 		// White House
-	    "id": "3",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-77.03657390000001, 38.8976633],
-	        zoom: 17
-	    }
+		"id": "3",
+		"camera": {
+			speed: 0.1,
+			center: [-77.03657390000001, 38.8976633],
+			zoom: 17
+		}
 	}, {
 		// Kremlin
-	    "id": "1",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [37.61749940000004,55.7520233],
-	        zoom: 16,
-	        pitch: 25
-	    }
+		"id": "1",
+		"camera": {
+			speed: 0.1,
+			center: [37.61749940000004,55.7520233],
+			zoom: 16,
+			pitch: 25
+		}
 	}, {
 		// Trump Tower
-	    "id": "4",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-73.973869,40.762459], // starting position [lng, lat]
-	        zoom: 17
-	    }
+		"id": "4",
+		"camera": {
+			speed: 0.1,
+			center: [-73.973869,40.762459], // starting position [lng, lat]
+			zoom: 17
+		}
 	}, {
 		// Buckingham Palace
-	    "id": "5",
-	    "camera": {
-	    	speed: 0.1,
-	    	center: [-0.140634, 51.501476], // starting position [lng, lat]
-	    	zoom: 15,
-	    	pitch: 75,
-	    	yaw: 25,
-	    }
+		"id": "5",
+		"camera": {
+			speed: 0.1,
+			center: [-0.140634, 51.501476], // starting position [lng, lat]
+			zoom: 15,
+			pitch: 75,
+			yaw: 25,
+		}
 	}, {
 		// mar - a - lago
 		"id": "6",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-80.037980,26.676820], // starting position [lng, lat]
-	        zoom: 17
-	    }
+		"camera": {
+			speed: 0.1,
+			center: [-80.037980,26.676820], // starting position [lng, lat]
+			zoom: 17
+		}
 	 }, {
-	 	// the castro
+		// the castro
 		"id": "7",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-122.43512,37.761], // starting position [lng, lat]
-	        zoom: 17,
-	    }
+		"camera": {
+			speed: 0.1,
+			center: [-122.43512,37.761], // starting position [lng, lat]
+			zoom: 17,
+		}
 	}, {
-	 	// the bean
+		// the bean
 		"id": "8",
-	    "camera": {
-	    	speed: 0.1,
-	        center: [-87.620659184,41.8762748282], // starting position [lng, lat]
-	        zoom: 17,
-	    }
+		"camera": {
+			speed: 0.1,
+			center: [-87.620659184,41.8762748282], // starting position [lng, lat]
+			zoom: 17,
+		}
 	}];
 
 	function playback(index) {
-	    // Animate the map position based on camera properties
-	    map.flyTo(map_locations[index].camera);
+		// Animate the map position based on camera properties
+		map.flyTo(map_locations[index].camera);
 
-	    map.once('moveend', function() {
-	        // Duration the slide is on screen after interaction
-	        window.setTimeout(function() {
-	            // Increment index
-	            index = (index + 1 === map_locations.length) ? 0 : index + 1;
-	            playback(index);
-	        }, 3000); // After callback, show the location for 3 seconds.
-	    });
+		map.once('moveend', function() {
+			// Duration the slide is on screen after interaction
+			window.setTimeout(function() {
+				// Increment index
+				index = (index + 1 === map_locations.length) ? 0 : index + 1;
+				playback(index);
+			}, 3000); // After callback, show the location for 3 seconds.
+		});
 	}
 
 	map.on('load', function() {
-	    // Start the playback animation for each borough
-	    // playback(0);
+		// Start the playback animation for each borough
+		// playback(0);
 	});
 
 	$(document).ready(function() {
@@ -255,7 +269,6 @@ $path = 'tweets/'.$_SESSION['id'];
 			}
 		});
 
-
 		// Gonna need to validate these some more...
 		$('.submit').on('click', function() {
 			var formdata = $("form").serialize();
@@ -265,10 +278,15 @@ $path = 'tweets/'.$_SESSION['id'];
 				data: formdata,
 				dataType: "json",
 				success: function (result) {
+					console.log(result);
 					if(result['error'] === true) {
 						// We supply a title in our error messages but PHPAuth doesn't
 						// so, if `result['title']` doesn't exist, just print 'Error'
 						toastr.error(result['message'], result['title'] || 'Error');
+					} else if(result['2fa'] === true) {
+						toastr.success('A code has been sent to (xxx) xxx-xx' + result['phone'], 'Code sent!');
+						$("#code").inputmask({"mask": "9999", showMaskOnHover: false});
+						$('.2fa').show();
 					} else {
 						window.location.href = "home.php";
 					}

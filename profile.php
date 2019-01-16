@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use PHPAuth\Config as PHPAuthConfig;
 use PHPAuth\Auth as PHPAuth;
+use Twilio\Rest\Client;
 
 require_once('credentials.php');
 $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
@@ -24,6 +25,7 @@ $statement->execute([
     'agent' => $_SERVER['HTTP_USER_AGENT']??null,
     'action' => 'profile.php'
 ]);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +50,8 @@ $statement->execute([
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="home-style.css">
     <script type="text/javascript" src="cities.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 
 <body>
@@ -163,16 +167,46 @@ $statement->execute([
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 input-effect">
+                                    <div class="col-md-12 input-effect phone-form" <?php if(strlen($auth->getCurrentUser()['phone']) == 10) { echo "style='display: none'"; } ?>>
                                         <div class="md-form">
                                             <input type="tel" autocomplete="off" id="phone" name="phone" class="form-control">
                                             <label for="phone" class="float-up">Phone number</label>
                                         </div>
                                     </div>
+                                    <div class="col-md-12 input-effect verify-phone-form" style="display: none;">
+                                        <div class="md-form">
+                                            <input type="tel" autocomplete="off" id="code" name="code" class="form-control">
+                                            <label for="code" class="float-up">Verify code</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">Enable 2-factor authentication</button>
+                                    <div class="col-md-12 text-center phone-form" <?php if(strlen($auth->getCurrentUser()['phone']) == 10) { echo "style='display: none'"; } ?>>
+                                        <button type="button" class="btn btn-hollow verify-number" data-toggle="button" aria-pressed="false" autocomplete="off">Enable 2-factor authentication</button>
+                                    </div>
+                                    <div class="col-md-12 text-center verify-phone-form" style="display: none;">
+                                        <button type="button" class="btn btn-hollow verify-code" data-toggle="button" aria-pressed="false" autocomplete="off">Verify code</button>
+                                    </div>
+                                </div>
+                                <div class="row phone-set" style="display: none">
+                                    <div class="col-md-12 input-effect phone-form-disable">
+                                        <div class="md-form">
+                                            <input type="tel" autocomplete="off" value="<?php 
+
+                                            if(  preg_match( '/^(\d{3})(\d{3})(\d{4})$/', $auth->getCurrentUser()['phone'],  $matches ) )
+                                                  {
+                                                    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+                                                    echo $result;
+                                                  }
+
+                                            ?>" id="set-phone" name="set-phone" class="form-control" disabled="disabled">
+                                            <label for="set-phone" class="float-up active">Phone number</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row phone-set" style="display: none">
+                                    <div class="col-md-12 text-center phone-form-disable">
+                                        <button type="button" class="btn btn-hollow disable-number" data-toggle="button" aria-pressed="false" autocomplete="off">Disable 2-factor authentication</button>
                                     </div>
                                 </div>
                             </div>
@@ -279,7 +313,100 @@ $statement->execute([
         </footer>
     </div>
     <script>
+    <?php
+        if(strlen($auth->getCurrentUser()['phone']) == 10) {
+            echo "var enable = false;";
+        } else {
+            echo "var enable = true;";
+        }
+    ?>
     $(document).ready(function() {
+        var phone = '';
+        $('.verify-number').on('click', function() {
+            if($('#phone').val().replace(/\D/g,'').length != 10) {
+                toastr.error('Please provide a complete phone number');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: 'verifynumber.php',
+                    data: { phone: $('#phone').val() },
+                    success: function(response) {
+                        if(response == 'error') {
+                            toastr.error('Please provide a complete phone number');
+                        } else {
+                            console.log('Response: ', response);
+                            toastr.success('Your code has been sent');
+                            $('.phone-form').hide();
+                            $('.verify-phone-form').show();
+                            phone = $('#phone').val();
+                            $('#code').focus();
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error!', error);
+                    }
+                });
+            }
+        });
+
+        $('.disable-number').on('click', function() {
+            $.ajax({
+                type: "POST",
+                url: 'verifynumber.php',
+                data: { phone: $('#set-phone').val() },
+                success: function(response) {
+                    if(response == 'error') {
+                        toastr.error('Please provide a complete phone number');
+                    } else {
+                        console.log('Response: ', response);
+                        toastr.success('Your code has been sent');
+                        $('.phone-form').hide();
+                        $('.verify-phone-form').show();
+                        $('.phone-form-disable').hide();
+                        $('#code').focus();
+                    }
+                },
+                error: function(error) {
+                    console.error('Error!', error);
+                }
+            });
+        });
+
+        $('.verify-code').on('click', function() {
+            $.ajax({
+                type: "POST",
+                url: 'verifycode.php',
+                data: { code: $('#code').val(), enable: enable },
+                success: function(response) {
+                    if(response == 'true') {
+                        if(enable == true) {
+                            toastr.success('Your 2FA has been enabled');
+                            $('.verify-phone-form').hide();
+                            $('#set-phone').val(phone);
+                            $('.phone-set').show();
+                            $('.phone-form-disable').show();
+                            $('#code').val('');
+                        } else {
+                            toastr.success('Your 2FA has been disabled');
+                            $('.verify-phone-form').hide();
+                            $('#phone').val('');
+                            $('.phone-set').hide();
+                            $('.phone-form').show();
+                            $('#code').val('');
+                        }
+                        enable = !enable;
+                    } else {
+                        toastr.error('Incorrect code, please try again');
+                        $('#code').val('');
+                        $('#code').focus();
+                    }
+                },
+                error: function(error) {
+                    console.error('Error!', error);
+                }
+            });
+        });
+
         $('#name').on('focus', function() {
             $("label[for='name']").addClass('active');
         }).on('blur', function() {
@@ -322,6 +449,16 @@ $statement->execute([
             }
         });
 
+        $("#code").inputmask({"mask": "9999", showMaskOnHover: false});
+
+        $('#code').on('focus', function() {
+            $("label[for='code']").addClass('active');
+        }).on('blur', function() {
+            if($(this).val().length == 0) {
+                $("label[for='code']").removeClass('active');
+            }
+        });
+
         $(".header-picture, .profile-picture").on('mouseenter', function() {
             $('.click-to-edit').toggleClass('invisible');
             $('.photo-selection').text($(this).attr('data-type'));
@@ -336,7 +473,16 @@ $statement->execute([
             $("#wrapper").toggleClass("toggled");
             $('.navbar-collapse').toggleClass("padded");
         });
+
+        <?php
+            if(strlen($auth->getCurrentUser()['phone']) == 10) {
+                echo "$('.phone-set').show();";
+            }
+        ?>
     });
+    function status() {
+        console.log(enable);
+    }
     </script>
 </body>
 
