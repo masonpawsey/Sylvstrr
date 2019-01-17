@@ -30,6 +30,12 @@ if($statement->errorInfo()[0] != "00000") {
     die();
 }
 
+// Clear the 2fa verify_code upon successful login
+// If it doens't exist, it'll just stay NULL
+$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = NULL WHERE id = :id');
+$statement->execute([
+    'id' => $auth->getCurrentUser()['uid']
+]);
 
 ?>
 <!DOCTYPE html>
@@ -54,6 +60,7 @@ if($statement->errorInfo()[0] != "00000") {
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="home-style.css">
     <script type="text/javascript" src="cities.js"></script>
+    <link rel="icon" type="image/png" href="./assets/favicon.png">
 </head>
 
 <body>

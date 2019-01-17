@@ -16,16 +16,6 @@ if ($auth->isLogged()) {
 	die('You are logged in');
 }
 
-$_SESSION['id'] = uniqid();
-$path = 'tweets/'.$_SESSION['id'];
-
-// Clear the 2fa verify_code upon successful login
-// If it doens't exist, it'll just stay NULL
-$statement = $dbh->prepare('UPDATE phpauth_users SET verify_code = NULL WHERE id = :id');
-$statement->execute([
-	'id' => $auth->getCurrentUser()['uid']
-]);
-
 ?>
 <html>
 <head>
@@ -49,7 +39,8 @@ $statement->execute([
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	<script type="text/javascript" src="cities.js"></script>
 	<link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+	<script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+	<link rel="icon" type="image/png" href="./assets/favicon.png">
 </head>
 
 <body>

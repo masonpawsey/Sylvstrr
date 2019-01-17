@@ -38,6 +38,7 @@ if ($auth->isLogged()) {
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	<script type="text/javascript" src="cities.js"></script>
 	<link rel="stylesheet" href="style.css">
+	<link rel="icon" type="image/png" href="./assets/favicon.png">
 </head>
 
 <body>
