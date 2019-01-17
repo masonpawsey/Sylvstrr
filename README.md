@@ -8,7 +8,7 @@
 
 - [ ] Login button doesn't reset from :focus(?) when login fails
 
-- [ ] HTTPS
+- [x] HTTPS
 
 - [x] Favicon
 
