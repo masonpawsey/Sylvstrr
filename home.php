@@ -12,7 +12,7 @@ $config = new PHPAuthConfig($dbh);
 $auth = new PHPAuth($dbh, $config);
 
 if (!$auth->isLogged()) {
-	header("Location: index.php");
+	header("Location: index");
 	die('Forbidden');
 }
 
@@ -22,7 +22,7 @@ $statement->execute([
     'uid' => $auth->getCurrentUser()['uid'],
     'ip' => $_SERVER['REMOTE_ADDR'],
     'agent' => $_SERVER['HTTP_USER_AGENT']??null,
-    'action' => 'home.php'
+    'action' => 'home'
 ]);
 // Print errors, if they exist
 if($statement->errorInfo()[0] != "00000") {
@@ -107,13 +107,13 @@ $statement->execute([
                     </a>
                 </li>
                 <li>
-                    <a href="home.php">Dashboard</a>
+                    <a href="home">Dashboard</a>
                 </li>
                 <li>
-                    <a href="history.php">Query history</a>
+                    <a href="history">Query history</a>
                 </li>
                 <li>
-                    <a href="profile.php">Profile</a>
+                    <a href="profile">Profile</a>
                 </li>
             </ul>
         </div>
@@ -137,8 +137,8 @@ $statement->execute([
                             <?php echo $auth->getCurrentUser()['email']; ?>
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="profile.php">Profile</a>
-                            <a class="dropdown-item" href="logout.php">Log out</a>
+                            <a class="dropdown-item" href="profile">Profile</a>
+                            <a class="dropdown-item" href="logout">Log out</a>
                           </div>
                         </li>
                 </nav>
@@ -263,7 +263,7 @@ $statement->execute([
                                 </div>
                             </div>
                             <div class="card-footer recent-searches-card-footer text-right <?php if(empty($most_recent_queries)) { echo "d-none"; } ?>">
-                              <a href="history.php"><small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small></a>
+                              <a href="history"><small class="text-muted">See more <i class="fas fa-arrow-circle-right"></i></small></a>
                             </div>
                         </div>
                         <br>

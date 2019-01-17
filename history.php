@@ -12,7 +12,7 @@ $config = new PHPAuthConfig($dbh);
 $auth = new PHPAuth($dbh, $config);
 
 if (!$auth->isLogged()) {
-	header("Location: index.php");
+	header("Location: index");
 	die('Forbidden');
 }
 
@@ -22,7 +22,7 @@ $statement->execute([
     'uid' => $auth->getCurrentUser()['uid'],
     'ip' => $_SERVER['REMOTE_ADDR'],
     'agent' => $_SERVER['HTTP_USER_AGENT']??null,
-    'action' => 'history.php'
+    'action' => 'history'
 ]);
 
 ?>
@@ -72,13 +72,13 @@ $statement->execute([
                     </a>
                 </li>
                 <li>
-                    <a href="home.php">Dashboard</a>
+                    <a href="home">Dashboard</a>
                 </li>
                 <li>
-                    <a href="history.php">Query history</a>
+                    <a href="history">Query history</a>
                 </li>
                 <li>
-                    <a href="profile.php">Profile</a>
+                    <a href="profile">Profile</a>
                 </li>
             </ul>
         </div>
@@ -88,7 +88,7 @@ $statement->execute([
             <header>
                 <!-- Fixed navbar -->
                 <nav class="navbar navbar-expand fixed-top">
-                    <a class="navbar-brand" href="home.php">sylvstrr</a>
+                    <a class="navbar-brand" href="home">sylvstrr</a>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
@@ -102,8 +102,8 @@ $statement->execute([
                             <?php echo $auth->getCurrentUser()['email']; ?>
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="profile.php">Profile</a>
-                            <a class="dropdown-item" href="logout.php">Log out</a>
+                            <a class="dropdown-item" href="profile">Profile</a>
+                            <a class="dropdown-item" href="logout">Log out</a>
                           </div>
                         </li>
                 </nav>
@@ -133,7 +133,7 @@ $statement->execute([
                                     // print_r($most_frequent_keyword);
                                 }
                                 if(empty($most_frequent_keyword)) {
-                                    echo "<p class='card-text'>This is where we'll keep track of all your queries. <a href='home.php'>Go here</a> and make a query!</p>";
+                                    echo "<p class='card-text'>This is where we'll keep track of all your queries. <a href='home'>Go here</a> and make a query!</p>";
                                 } else {
                                 ?>  <p class="card-text">Here is a log of all your queries. <br>
                                     Your most frequent keyword is: <strong><?php echo $most_frequent_keyword['keyword']; ?></strong>. You've searched for it <strong>
