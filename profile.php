@@ -35,7 +35,7 @@ $statement->execute([
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Sylvester</title>
+    <title>sylvstrr</title>
     <!-- Boostrap CSS & JS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -82,7 +82,7 @@ $statement->execute([
             <header>
                 <!-- Fixed navbar -->
                 <nav class="navbar navbar-expand fixed-top">
-                    <a class="navbar-brand" href="home.php">sylvester</a>
+                    <a class="navbar-brand" href="home.php">sylvstrr</a>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
@@ -308,7 +308,7 @@ $statement->execute([
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col text-right">Team Sylvester</div>
+                  <div class="col text-right">sylvstrr</div>
                 </div>
             </div>
         </footer>

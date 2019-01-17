@@ -19,7 +19,7 @@ if ($auth->isLogged()) {
 <html>
 <head>
 	<meta charset='utf-8' />
-	<title>Team Sylvester</title>
+	<title>sylvstrr</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
 	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
@@ -48,7 +48,7 @@ if ($auth->isLogged()) {
 			</div>
 			<div class="col"></div>
 			<div class="col text-center no-gutters header">
-				<h1>sylvester</h1>
+				<h1>sylvstrr</h1>
 			</div>
 		</div>
 		<div class="row">
