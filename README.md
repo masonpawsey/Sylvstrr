@@ -4,15 +4,13 @@
 
 - [ ] Reset password function
 
-- [ ] Favicon
-
 - [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
 
 - [ ] Login button doesn't reset from :focus(?) when login fails
 
 - [ ] HTTPS
 
-- [ ] Include common headers into a `common.php` file
+- [x] Favicon
 
 - [x] 2FA
 
