@@ -61,6 +61,39 @@ $statement->execute([
     <link rel="stylesheet" type="text/css" href="home-style.css">
     <script type="text/javascript" src="cities.js"></script>
     <link rel="icon" type="image/png" href="./assets/favicon.png">
+    <script>
+    window.paceOptions = {
+        ajax: {
+            trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'REMOVE']
+        },
+        startOnPageLoad: false
+    };
+    </script>
+    <style type="text/css">
+        .pace {
+          -webkit-pointer-events: none;
+          pointer-events: none;
+
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+
+        .pace-inactive {
+          display: none;
+        }
+
+        .pace .pace-progress {
+          background: #4285F4;
+          position: fixed;
+          z-index: 2000;
+          top: 0;
+          right: 100%;
+          width: 100%;
+          height: 5px;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 </head>
 
 <body>
@@ -134,24 +167,7 @@ $statement->execute([
                                     </div>
                                     <div class="col-md-12 col-lg-2">
                                         <div class="md-form">
-                                            <button type="submit" class="btn btn-hollow"><div class="submit-loader d-none" title="0">
-                                              <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                               width="20px" height="20px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
-                                              <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
-                                                s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
-                                                c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
-                                              <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
-                                                C22.32,8.481,24.301,9.057,26.013,10.047z">
-                                                <animateTransform attributeType="xml"
-                                                  attributeName="transform"
-                                                  type="rotate"
-                                                  from="0 20 20"
-                                                  to="360 20 20"
-                                                  dur="0.5s"
-                                                  repeatCount="indefinite"/>
-                                                </path>
-                                              </svg>
-                                            </div> submit</button>
+                                            <button type="submit" class="btn btn-hollow">submit</button>
                                             </form>
                                         </div>
                                     </div>
@@ -313,7 +329,6 @@ $statement->execute([
             e.preventDefault();
             var keyword = $('#keyword').val();
             var location = $('#location').val();
-            $('.submit-loader').toggleClass('d-none');
             $.ajax({
                 url: 'search.php',
                 type: 'POST',
@@ -326,7 +341,6 @@ $statement->execute([
                     $('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
                     $('.share').removeClass('d-none');
                     $('.recent-searches-card-footer').removeClass('d-none');
-                    $('.submit-loader').toggleClass('d-none');
                     $('#keyword').val('').blur();
                     $('#location').val('').blur();
                     var recent_searches_html = '';
