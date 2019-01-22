@@ -24,6 +24,6 @@ $statement->execute([
 
 $auth->logout($_SESSION['hash']);
 session_destroy();
-header("Location: index.php");
+header("Location: index");
 die('You have been logged out');
 ?>

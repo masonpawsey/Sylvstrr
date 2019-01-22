@@ -134,7 +134,7 @@ if ($auth->isLogged()) {
 		<div class="row">
 			<div class="col"></div>
 			<div class="col text-center">
-				<a href="signup.php">Need an account?</a>
+				<a href="signup">Need an account?</a>
 			</div>
 		</div>
 		<br><br>
@@ -279,7 +279,7 @@ if ($auth->isLogged()) {
 						$('.2fa').show();
 						$('#code').focus();
 					} else {
-						window.location.href = "home.php";
+						window.location.href = "home";
 					}
 				}
 			});
