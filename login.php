@@ -54,7 +54,7 @@ if(isset($phone)) {
 		]);
 		// Send the user the text
 		$client = new Client($account_sid, $auth_token);
-		$client->messages->create($phone, array( 'from' => $twilio_number, 'body' => 'Welcome to Sylvester! Verify your number with the code: ' + $verify_code));
+		$client->messages->create($phone, array( 'from' => $twilio_number, 'body' => 'Verify your sylvstrr number with the code: ' . $verify_code));
 		// Show them the last 2 digits of the phone number we sent a code to
 		return_result(array("2fa" => true, "phone" => substr($phone, -2)));
 	} else {

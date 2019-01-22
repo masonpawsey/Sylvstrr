@@ -37,7 +37,7 @@ if(strlen(filter_var(str_replace(array('+','-'), '', $_POST['phone']), FILTER_SA
 	]);
 
 	$client = new Client($account_sid, $auth_token);
-	$client->messages->create($_POST['phone'], array( 'from' => $twilio_number, 'body' => 'Welcome to Sylvester! Verify your number with the code: ' + $verify_code));
+	$client->messages->create($_POST['phone'], array( 'from' => $twilio_number, 'body' => 'Verify your sylvstrr number with the code: ' . $verify_code));
 
 	// Clean up formatting from the phone number
 	$_SESSION['phone'] = filter_var(str_replace(array('+','-'), '', $_POST['phone']), FILTER_SANITIZE_NUMBER_INT);
