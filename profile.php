@@ -133,14 +133,6 @@ $statement->execute([
                                 <div class="row">
                                     <div class="col-md-12 input-effect">
                                         <div class="md-form">
-                                            <input type="text" autocomplete="off" id="name" name="name" class="form-control">
-                                            <label for="name" class="float-up">Name</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 input-effect">
-                                        <div class="md-form">
                                             <input type="email" autocomplete="off" id="email" name="email" class="form-control" value="<?php echo $auth->getCurrentUser()['email']; ?>">
                                             <label for="email" class="float-up <?php if($auth->getCurrentUser()['email']){echo "active"; } ?>">Email</label>
                                         </div>
@@ -149,22 +141,30 @@ $statement->execute([
                                 <div class="row">
                                     <div class="col-md-12 input-effect">
                                         <div class="md-form">
-                                            <input type="password" autocomplete="off" id="password" name="password" class="form-control">
-                                            <label for="password" class="float-up">Password</label>
+                                            <input type="password" autocomplete="off" id="current-password" name="current-password" class="form-control">
+                                            <label for="current-password" class="float-up">Current password</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 input-effect">
                                         <div class="md-form">
-                                            <input type="password" autocomplete="off" id="password-2" name="password-2" class="form-control">
-                                            <label for="password-2" class="float-up">Repeat password</label>
+                                            <input type="password" autocomplete="off" id="new-password" name="new-password" class="form-control">
+                                            <label for="new-password" class="float-up">New password</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 input-effect">
+                                        <div class="md-form">
+                                            <input type="password" autocomplete="off" id="new-password-2" name="new-password-2" class="form-control">
+                                            <label for="new-password-2" class="float-up">Repeat new password</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-center">
-                                        <button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">Change password</button>
+                                        <button type="button" class="btn btn-hollow change-password" data-toggle="button" aria-pressed="false" autocomplete="off">Change password</button>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -408,14 +408,6 @@ $statement->execute([
             });
         });
 
-        $('#name').on('focus', function() {
-            $("label[for='name']").addClass('active');
-        }).on('blur', function() {
-            if($(this).val().length == 0) {
-                $("label[for='name']").removeClass('active');
-            }
-        });
-
         $('#email').on('focus', function() {
             $("label[for='email']").addClass('active');
         }).on('blur', function() {
@@ -424,21 +416,71 @@ $statement->execute([
             }
         });
 
-        $('#password').on('focus', function() {
-            $("label[for='password']").addClass('active');
+        $('#current-password').on('focus', function() {
+            $("label[for='current-password']").addClass('active');
         }).on('blur', function() {
             if($(this).val().length == 0) {
-                $("label[for='password']").removeClass('active');
+                $("label[for='current-password']").removeClass('active');
             }
         });
 
-        $('#password-2').on('focus', function() {
-            $("label[for='password-2']").addClass('active');
+        $('#new-password').on('focus', function() {
+            $("label[for='new-password']").addClass('active');
         }).on('blur', function() {
             if($(this).val().length == 0) {
-                $("label[for='password-2']").removeClass('active');
+                $("label[for='new-password']").removeClass('active');
             }
         });
+
+        $('#new-password-2').on('focus', function() {
+            $("label[for='new-password-2']").addClass('active');
+        }).on('blur', function() {
+            if($(this).val().length == 0) {
+                $("label[for='new-password-2']").removeClass('active');
+            }
+        });
+
+        $('.change-password').on('click', function(event) {
+            if($('#current-password').val().length < 2) {
+                toastr.error('Please provide your current password');
+                return;
+            }
+
+            if($('#new-password').val().length < 2) {
+                toastr.error('Please provide a new password');
+                return;
+            }
+
+            if($('#new-password-2').val() != $('#new-password').val()) {
+                toastr.error('Your passwords don\'t match');
+                return;
+            }
+
+            if($('#new-password').val() == $('#current-password').val()) {
+                toastr.error('The new password must be different than your old password');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: 'changepassword.php',
+                data: { current: $('#current-password').val(), new: $('#new-password').val(), new2: $('#new-password-2').val() },
+                success: function(result) {
+                    response = JSON.parse(result);
+                    if(response['error'] === true) {
+                        toastr.error(response['message'], response['title'] || 'Error');
+                    } else {
+                        toastr.success('Your password has been changed');
+                        $('#current-password').val('').blur();
+                        $('#new-password').val('').blur();
+                        $('#new-password-2').val('').blur();
+                    }
+                },
+                error: function(error) {
+                    console.error('Error!', error);
+                }
+            });
+        })
 
         $("#phone").inputmask({"mask": "(999) 999-9999", showMaskOnHover: false});
 
