@@ -17,6 +17,7 @@
 	<!-- MDB core JavaScript -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.13/js/mdb.min.js"></script>
 	<link rel="icon" type="image/png" href="./assets/favicon.png">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<style type="text/css">
 		#map_404 {
 		  position:absolute;
@@ -28,6 +29,7 @@
 			margin: 0 auto;
 			padding: 0.5em;
 			background: #000;
+			line-height: 55px;
 		}
 		.container {
 			background: transparent;
@@ -35,6 +37,12 @@
 			z-index: 1;
 			color: #fff;
 			font-size: 3em;
+		}
+		a {
+			padding-left: 25px;
+		}
+		i {
+			font-size: 0.6em;
 		}
 	</style>
 </head>
@@ -47,7 +55,7 @@
 		    		page not found
 		    	</div>
 		    	<div>
-		    		<a href="home">land ahoy</a>
+		    		<a href="home">land ahoy <i class="fas fa-arrow-right"></i></a>
 		    	</div>
 		    </div>
 		</div>
