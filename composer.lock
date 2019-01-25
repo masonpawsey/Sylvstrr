@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "79c4aa3d5c566921dd47ce489def3d25",
+    "content-hash": "dc4e2f60c8487134b7b8e0d8bfb39c99",
     "packages": [
         {
             "name": "bjeavons/zxcvbn-php",
@@ -139,16 +139,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.0.5",
+            "version": "v6.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32"
+                "reference": "8190d73eb5def11a43cfb020b7f36db65330698c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/cb3ea134d4d3729e7857737d5f320cce9caf4d32",
-                "reference": "cb3ea134d4d3729e7857737d5f320cce9caf4d32",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/8190d73eb5def11a43cfb020b7f36db65330698c",
+                "reference": "8190d73eb5def11a43cfb020b7f36db65330698c",
                 "shasum": ""
             },
             "require": {
@@ -201,20 +201,20 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2018-03-27T13:49:45+00:00"
+            "time": "2018-11-16T00:41:32+00:00"
         },
         {
             "name": "twilio/sdk",
-            "version": "5.27.1",
+            "version": "5.28.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "3acdaa0f542ff3e9ad988dab85c1f0f9e7621375"
+                "reference": "d12afc8f14022b032a2f90f878534c63adc90e6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/3acdaa0f542ff3e9ad988dab85c1f0f9e7621375",
-                "reference": "3acdaa0f542ff3e9ad988dab85c1f0f9e7621375",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/d12afc8f14022b032a2f90f878534c63adc90e6c",
+                "reference": "d12afc8f14022b032a2f90f878534c63adc90e6c",
                 "shasum": ""
             },
             "require": {
@@ -247,7 +247,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2019-01-02T17:00:14+00:00"
+            "time": "2019-01-12T01:01:52+00:00"
         }
     ],
     "packages-dev": [],

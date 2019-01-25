@@ -3,13 +3,13 @@
 
 - [ ] Text Twilio for account info
 
-- [ ] Log out of all sessions
-
 - [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
 
 - [ ] Login button doesn't reset from :focus(?) when login fails
 
 - [ ] Bootstrap responsiveness
+
+- [x] Delete account
 
 - [x] Reset password function
 

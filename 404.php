@@ -62,7 +62,7 @@
 	</main>
 	<script>
 	function getRandomInRange(from, to, fixed) {
-	    return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+		return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
 	}
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFzb25wYXdzZXkiLCJhIjoiY2puemkzb3N0MWY4djNra2JsZzBpaXpicSJ9.O8dFlt7FrskfE-GL8qvBUA';
 	var zoom = Math.floor(Math.random() * 3) + 4;

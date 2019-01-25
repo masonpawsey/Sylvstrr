@@ -148,84 +148,21 @@ if ($auth->isLogged()) {
 		</div>
 	</main>
 	<script>
+	function getRandomInRange(from, to, fixed) {
+		return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+	}
+
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFzb25wYXdzZXkiLCJhIjoiY2puemkzb3N0MWY4djNra2JsZzBpaXpicSJ9.O8dFlt7FrskfE-GL8qvBUA';
+	var zoom = Math.floor(Math.random() * 3) + 4;
+	var lng = getRandomInRange(-90, -20, 5);
+	var lat = getRandomInRange(20, 90, 5);
 	var map = new mapboxgl.Map({
 		container: 'map', // container id
 		style: 'mapbox://styles/masonpawsey/cjnzi73pd85jn2rmnm1oj9g65', // stylesheet location
-		center: [-122.43512,37.761], // starting position [lng, lat]
-		zoom: 17,
+		center: [lng, lat], // starting position [lng, lat]
+		zoom: zoom,
 		interactive: false
 	});
-
-	var map_locations = [{
-		// CSUB
-		"id": "2",
-		"camera": {
-			speed: 0.1,
-			center: [-119.10506171751422,35.347574509536656],
-			zoom: 14.75,
-			pitch: 50
-		}
-	}, {
-		// White House
-		"id": "3",
-		"camera": {
-			speed: 0.1,
-			center: [-77.03657390000001, 38.8976633],
-			zoom: 17
-		}
-	}, {
-		// Kremlin
-		"id": "1",
-		"camera": {
-			speed: 0.1,
-			center: [37.61749940000004,55.7520233],
-			zoom: 16,
-			pitch: 25
-		}
-	}, {
-		// Trump Tower
-		"id": "4",
-		"camera": {
-			speed: 0.1,
-			center: [-73.973869,40.762459], // starting position [lng, lat]
-			zoom: 17
-		}
-	}, {
-		// Buckingham Palace
-		"id": "5",
-		"camera": {
-			speed: 0.1,
-			center: [-0.140634, 51.501476], // starting position [lng, lat]
-			zoom: 15,
-			pitch: 75,
-			yaw: 25,
-		}
-	}, {
-		// mar - a - lago
-		"id": "6",
-		"camera": {
-			speed: 0.1,
-			center: [-80.037980,26.676820], // starting position [lng, lat]
-			zoom: 17
-		}
-	 }, {
-		// the castro
-		"id": "7",
-		"camera": {
-			speed: 0.1,
-			center: [-122.43512,37.761], // starting position [lng, lat]
-			zoom: 17,
-		}
-	}, {
-		// the bean
-		"id": "8",
-		"camera": {
-			speed: 0.1,
-			center: [-87.620659184,41.8762748282], // starting position [lng, lat]
-			zoom: 17,
-		}
-	}];
 
 	function playback(index) {
 		// Animate the map position based on camera properties

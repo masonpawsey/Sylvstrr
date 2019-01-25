@@ -247,6 +247,60 @@ nav a {
   line-height: 15px !important;
 }
 
+.btn-hollow-warning {
+  border: #ffc107 1px solid !important;
+  color: #ffc107 !important;
+  background: none !important;
+  box-shadow: none !important;
+  line-height: 4px;
+}
+
+.btn-hollow-warning:hover {
+  border: #ffc107 1px solid !important;
+  color: #ffffff !important;
+  background: #ffc107 !important;
+}
+
+.dt-button.btn-hollow-warning {
+  line-height: 15px !important;
+}
+
+.btn-hollow-danger {
+  border: #dc3545 1px solid !important;
+  color: #dc3545 !important;
+  background: none !important;
+  box-shadow: none !important;
+  line-height: 4px;
+}
+
+.btn-hollow-danger:hover {
+  border: #dc3545 1px solid !important;
+  color: #ffffff !important;
+  background: #dc3545 !important;
+}
+
+.dt-button.btn-hollow-danger {
+  line-height: 15px !important;
+}
+
+.btn-hollow-danger-toastr {
+  border: #fff 1px solid !important;
+  color: #fff !important;
+  background: none !important;
+  box-shadow: none !important;
+  line-height: 4px;
+}
+
+.btn-hollow-danger-toastr:hover {
+  border: #fff 1px solid !important;
+  color: #dc3545 !important; 
+  background: #fff !important;
+}
+
+.dt-button.btn-hollow-danger-toastr {
+  line-height: 15px !important;
+}
+
 .mapboxgl-ctrl-bottom-right {
   display: none;
 }
