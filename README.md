@@ -9,6 +9,8 @@
 
 - [ ] Bootstrap responsiveness
 
+- [ ] Share result
+
 - [x] Delete account
 
 - [x] Reset password function
