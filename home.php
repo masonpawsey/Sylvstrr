@@ -276,7 +276,7 @@ $statement->execute([
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
-										<h5 class="card-title"><strong>Debug</strong></h5>
+										<h5 class="card-title debug"><strong>Debug</strong></h5>
 										<pre id="debug"></pre>
 									</div>
 								</div>
@@ -362,6 +362,7 @@ $statement->execute([
 			var keyword = $('#keyword').val();
 			var location = $('#location').val();
 			$('.download-xml').remove();
+			$('.download-json').remove();
 			$.ajax({
 				url: 'search.php',
 				type: 'POST',
@@ -370,7 +371,8 @@ $statement->execute([
 					'location' : location
 				},
 				success: function(data) {             
-					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>'); 
+					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>');
+					$('.debug').append('<button class="btn btn-hollow download-json float-right">Download JSON</button>');
 					$('#debug').html(JSON.parse(data)[0]);
 					$('#xml').text(vkbeautify.xml(JSON.parse(data)[3]));
 					$('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
@@ -421,7 +423,11 @@ $statement->execute([
 
 	$(document).on('click','.download-xml', function(){
 		downloadInnerHtml('corpus.xml', 'xml','text/html');
-	}) 
+	});
+
+	$(document).on('click','.download-json', function(){
+		downloadInnerHtml('corpus.json', 'debug','text/json');
+	});
 	</script>
 </body>
 
