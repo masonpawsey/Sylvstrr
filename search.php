@@ -94,10 +94,20 @@ $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class
 $keyword = str_replace(' ', '', $keyword);
 $result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
 
+$xml = '<?xml version="1.0" encoding="UTF-8"?><tweets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+
+foreach (json_decode($raw) as $key => $value) {
+	$xml .= '<tweet><text>'.htmlspecialchars($value->text).'</text><sentiment></sentiment></tweet>';
+}
+
+$xml .= '</tweets>';
+
+// xml is passed to AI engine
+// JSON is passed to browser FOR THE MOMENT - will be replaced with just the resulting sentiment
+
 // The array we return holds the resulting Tweets as well as coordinates for the location
 // they passed so we can update the map on home.php, and their most recent searches
-$return = [$result, [$longitude, $latitude], $most_recent_queries];
-
+$return = [$result, [$longitude, $latitude], $most_recent_queries, $xml];
 print_r(json_encode($return));
 
 $dbh = null;

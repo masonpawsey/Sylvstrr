@@ -218,7 +218,7 @@ $statement->execute([
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col text-right">sylvstrr</div>
+                  <div class="col text-right">sylvstrr &copy; <?php echo date('Y'); ?></div>
                 </div>
             </div>
         </footer>
