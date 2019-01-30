@@ -164,7 +164,7 @@ $statement->execute([
 								</div>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-hollow change-password" data-toggle="button" aria-pressed="false" autocomplete="off" style="line-height:18px">Change password</button>
+										<button type="button" class="btn btn-hollow change-password" data-toggle="button" aria-pressed="false" autocomplete="off" style="line-height:18px; padding-top: 7px; padding-bottom: 7px;">Change password</button>
 									</div>
 								</div>
 								<div class="row">
@@ -213,7 +213,7 @@ $statement->execute([
 								<br><br>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-hollow-danger delete-account" data-toggle="modal" data-target="#delete-account-modal" aria-pressed="false" autocomplete="off" style="line-height: 18px;">Delete account</button>
+										<button type="button" class="btn btn-hollow-danger delete-account" data-toggle="modal" data-target="#delete-account-modal" aria-pressed="false" autocomplete="off" style="line-height:18px; padding-top: 7px; padding-bottom: 7px;">Delete account</button>
 									</div>
 								</div>
 							</div>
