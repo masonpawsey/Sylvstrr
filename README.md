@@ -9,6 +9,8 @@
 
 - [ ] Share result
 
+- [ ] Footer floats on mobile?
+
 - [x] Login button doesn't reset from :focus(?) when login fails
 
 - [x] Delete account

@@ -147,7 +147,7 @@ $statement->execute([
 			<!-- Begin page content -->
 			<main role="main" class="container-fluid">
 				<div class="row" style="margin-top: 60px">
-					<div class="col-sm-8">
+					<div class="col-md-8">
 						<div class="card">
 							<div class="card-body">
 								<form id="search_form">
@@ -168,7 +168,7 @@ $statement->execute([
 										</div>
 										<div class="col-md-12 col-lg-2">
 											<div class="md-form">
-												<button type="submit" class="btn btn-hollow">submit</button>
+												<button type="submit" class="btn btn-hollow btn-100">submit</button>
 											</div>
 										</div>
 									</div>
@@ -190,7 +190,7 @@ $statement->execute([
 							</div>
 						</div>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-md-4">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title"><strong>Trending on Twitter</strong></h5>
@@ -249,7 +249,7 @@ $statement->execute([
 													<i class="w-20-px fas fa-keyboard"></i> <?php echo $value['keyword']; ?> <br><i class="w-20-px fas fa-map-marker"></i> <?php echo $value['location']; ?><br><i class="w-20-px fas fa-clock"></i> <?php echo $value['time']; ?>
 												  </div>
 												  <div class="col-4">
-													<button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View</button>
+													<button type="button" class="btn btn-hollow btn-100" data-toggle="button" aria-pressed="false" autocomplete="off">View</button>
 												  </div>
 												</div>
 												<?php

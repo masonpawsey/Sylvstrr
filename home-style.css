@@ -14,6 +14,12 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.btn-100 {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .border {
   border: 1px red solid !important;
 }

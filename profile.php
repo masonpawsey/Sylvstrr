@@ -164,7 +164,7 @@ $statement->execute([
 								</div>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-hollow change-password" data-toggle="button" aria-pressed="false" autocomplete="off">Change password</button>
+										<button type="button" class="btn btn-hollow change-password" data-toggle="button" aria-pressed="false" autocomplete="off" style="line-height:18px">Change password</button>
 									</div>
 								</div>
 								<div class="row">
@@ -183,7 +183,7 @@ $statement->execute([
 								</div>
 								<div class="row">
 									<div class="col-md-12 text-center phone-form" <?php if(strlen($auth->getCurrentUser()['phone']) == 10) { echo "style='display: none'"; } ?>>
-										<button type="button" class="btn btn-hollow verify-number" data-toggle="button" aria-pressed="false" autocomplete="off">Enable 2-factor authentication</button>
+										<button type="button" class="btn btn-hollow verify-number" data-toggle="button" aria-pressed="false" autocomplete="off">Enable 2FA</button>
 									</div>
 									<div class="col-md-12 text-center verify-phone-form" style="display: none;">
 										<button type="button" class="btn btn-hollow verify-code" data-toggle="button" aria-pressed="false" autocomplete="off">Verify code</button>
@@ -207,13 +207,13 @@ $statement->execute([
 								</div>
 								<div class="row phone-set" style="display: none">
 									<div class="col-md-12 text-center phone-form-disable">
-										<button type="button" class="btn btn-hollow disable-number" data-toggle="button" aria-pressed="false" autocomplete="off">Disable 2-factor authentication</button>
+										<button type="button" class="btn btn-hollow disable-number" data-toggle="button" aria-pressed="false" autocomplete="off">Disable 2FA</button>
 									</div>
 								</div>
 								<br><br>
 								<div class="row">
 									<div class="col-md-12 text-center">
-										<button type="button" class="btn btn-hollow-danger delete-account" data-toggle="modal" data-target="#delete-account-modal" aria-pressed="false" autocomplete="off">Delete your account</button>
+										<button type="button" class="btn btn-hollow-danger delete-account" data-toggle="modal" data-target="#delete-account-modal" aria-pressed="false" autocomplete="off" style="line-height: 18px;">Delete account</button>
 									</div>
 								</div>
 							</div>
