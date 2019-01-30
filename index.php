@@ -203,6 +203,7 @@ if ($auth->isLogged()) {
 				data: formdata,
 				dataType: "json",
 				success: function (result) {
+					$('.submit').removeClass('active');
 					if(result['error'] === true) {
 						// We supply a title in our error messages but PHPAuth doesn't
 						// so, if `result['title']` doesn't exist, just print 'Error'
