@@ -331,6 +331,9 @@ $statement->execute([
 	}
 
 	$(document).ready(function() {
+		var map_id = 0;
+		var colours = ["#28a745", "#dc3545", "#007bff"];
+
 		$('input').focus(function() {
 			$(this).next('.float-up').addClass('active');
 		});
@@ -387,7 +390,7 @@ $statement->execute([
 							<i class="w-20-px fas fa-keyboard"></i> ` + item['keyword'] + ` <br><i class="w-20-px fas fa-map-marker"></i> ` + item['location'] + `<br><i class="w-20-px fas fa-clock"></i> ` + item['time'] + `
 						  </div>
 						  <div class="col-4">
-							<button type="button" class="btn btn-hollow" data-toggle="button" aria-pressed="false" autocomplete="off">View map</button>
+							<button type="button" class="btn btn-hollow btn-100" data-toggle="button" aria-pressed="false" autocomplete="off">View</button>
 						  </div>
 						</div>`
 						// Don't print a break on the last row
@@ -400,6 +403,46 @@ $statement->execute([
 						center: {lng: JSON.parse(data)[1][0], lat: JSON.parse(data)[1][1]},
 						zoom: 7
 					});
+
+					const metersToPixelsAtMaxZoom = (meters, latitude) =>
+					  meters / 0.075 / Math.cos(latitude * Math.PI / 180)
+
+					map.addSource('source_' + map_id, {
+					        "type": "geojson",
+					        "data": {
+					          "type": "FeatureCollection",
+					          "features": [{
+					            "type": "Feature",
+					            "geometry": {
+					              "type": "Point",
+					              "coordinates": [JSON.parse(data)[1][0], JSON.parse(data)[1][1]]
+					            }
+					          }]
+					        }
+					      });
+
+					      map.addLayer({
+					        "id": map_id + '',
+					        "type": "circle",
+					        "source": 'source_' + map_id,
+					        "paint": {
+					          "circle-radius": {
+					            stops: [
+					              [0, 0],
+					              [20, metersToPixelsAtMaxZoom(50000, JSON.parse(data)[1][1])]
+					            ],
+					            base: 2
+					          },
+					          "circle-color": colours[Math.floor(Math.random()*colours.length)],
+					          "circle-opacity": 0.3
+					        }
+					      });
+
+					      // Credit: https://stackoverflow.com/a/37794326
+
+					      map_id++;
+
+					
 				},
 				error: function(request,error)
 				{
