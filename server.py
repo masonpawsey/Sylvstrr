@@ -1,29 +1,13 @@
-"""
-Main module of the server file
-"""
+import os
+from flask import Flask,redirect
 
-# 3rd party moudles
-from flask import render_template
-import connexion
+app = Flask(__name__)
 
+@app.route('/')
+def hello():
+    return redirect("http://www.sylvstrr.com/ai-engine", code=302)
 
-# Create the application instance
-app = connexion.App(__name__, specification_dir="./")
-
-# Read the swagger.yml file to configure the endpoints
-app.add_api("swagger.yml")
-
-
-# create a URL route in our application for "/"
-@app.route("/")
-def home():
-    """
-    This function just responds to the browser URL
-    localhost:5000/
-    :return:        the rendered template "home.html"
-    """
-    return render_template("home.html")
-
-
-if __name__ == "__main__":
-app.run(debug=True)
+if __name__ == '__main__':
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
