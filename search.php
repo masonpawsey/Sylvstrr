@@ -105,9 +105,42 @@ $xml .= '</tweets>';
 // xml is passed to AI engine
 // JSON is passed to browser FOR THE MOMENT - will be replaced with just the resulting sentiment
 
+// Post to Azure for sentiment analysis
+$prefix = '{"documents": ';
+$suffix = '}';
+
+$body = $prefix.$raw.$suffix;
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+
+$headers = array();
+$headers[] = 'Content-Type: application/json';
+$headers[] = 'Ocp-Apim-Subscription-Key: ' . $azure_key;
+curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+$azure_result = curl_exec($ch);
+
+$array = json_decode($azure_result, true)['documents'];
+$score = 0;
+foreach ($array as $key => $value) {
+	$score += $value['score'];
+}
+
+$sentiment = $score/count($array);
+
+if (curl_errno($ch)) {
+    echo 'Error:' . curl_error($ch);
+}
+curl_close ($ch);
+
 // The array we return holds the resulting Tweets as well as coordinates for the location
 // they passed so we can update the map on home.php, and their most recent searches
-$return = [$result, [$longitude, $latitude], $most_recent_queries, $xml];
+$return = [$result, [$longitude, $latitude], $most_recent_queries, $xml, $sentiment];
 print_r(json_encode($return));
 
 $dbh = null;

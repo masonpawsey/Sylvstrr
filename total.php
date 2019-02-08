@@ -10,6 +10,8 @@ $statement = $dbh->prepare('SHOW TABLE STATUS');
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC)[8]['Rows'];
 
-print_r(number_format($result));
+exec("ls /var/www/html/trainer/jsons | wc -l 2>&1", $output, $return_var);
+
+echo "Current: " . number_format($result) . "<br>Pending JSONs: " . $output['0'] . "<br>Estimated: +" . number_format($output[0]*1150) . "<br>Assumed total: " . number_format($result + $output[0]*1150);
 
 ?>

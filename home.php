@@ -330,9 +330,23 @@ $statement->execute([
 		link.click(); 
 	}
 
+	function getColour(sentiment) {
+		if(sentiment >= 0 && sentiment < 0.4) {
+			return '#FF6666';
+		}
+		if(sentiment >= 0.4 && sentiment < 0.45) {
+			return '#FFFF66';
+		}
+		if(sentiment >= 0.45 && sentiment < 0.55) {
+			return '#B3FF66';
+		}
+		if(sentiment >= 0.55 && sentiment < 1) {
+			return '#67FF66';
+		}
+	}
+
 	$(document).ready(function() {
 		var map_id = 0;
-		var colours = ["#28a745", "#dc3545", "#007bff"];
 
 		$('input').focus(function() {
 			$(this).next('.float-up').addClass('active');
@@ -373,12 +387,13 @@ $statement->execute([
 					'keyword' : keyword,
 					'location' : location
 				},
-				success: function(data) {             
+				success: function(data) {
+					var sentiment = JSON.parse(data)[4];
 					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>');
 					$('.debug').append('<button class="btn btn-hollow download-json float-right">Download JSON</button>');
 					$('#debug').html(JSON.parse(data)[0]);
 					$('#xml').text(vkbeautify.xml(JSON.parse(data)[3]));
-					$('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u></strong>');
+					$('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u><small style="margin-left:25px">Score: '+sentiment.toFixed(2)+'<small></strong>');
 					$('.share').removeClass('d-none');
 					$('.recent-searches-card-footer').removeClass('d-none');
 					$('#keyword').val('').blur();
@@ -433,7 +448,7 @@ $statement->execute([
 					            ],
 					            base: 2
 					          },
-					          "circle-color": colours[Math.floor(Math.random()*colours.length)],
+					          "circle-color": getColour(sentiment),
 					          "circle-opacity": 0.3
 					        }
 					      });

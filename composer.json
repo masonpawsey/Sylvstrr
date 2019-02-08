@@ -1,6 +1,7 @@
 {
     "require": {
         "phpauth/phpauth": "^1.1",
-        "twilio/sdk": "^5.27"
+        "twilio/sdk": "^5.27",
+        "pear/http_request2": "2.2.1"
     }
 }
