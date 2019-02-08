@@ -8,7 +8,9 @@
 
 - [ ] Bootstrap responsiveness
 
-- [ ] Share result
+- [ ] Share map as a picture to social media
+
+- [ ] Store maps as base64s in the database to retrieve (would be better to store map code to recreate map...)
 
 - [ ] Export map as a high res image
 

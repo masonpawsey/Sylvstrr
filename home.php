@@ -60,6 +60,7 @@ $statement->execute([
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="home-style.css">
 	<script type="text/javascript" src="cities.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.js"></script>
 	<link rel="icon" type="image/png" href="./assets/favicon.png">
 	<script>
 	window.paceOptions = {
@@ -316,7 +317,8 @@ $statement->execute([
 		style: 'mapbox://styles/masonpawsey/cjnzi73pd85jn2rmnm1oj9g65', // stylesheet location
 		center: [-119.10506171751422, 35.34757450953665], // starting position [lng, lat]
 		zoom: 4,
-		interactive: true
+		interactive: true,
+		preserveDrawingBuffer: true
 	});
 
 	function downloadInnerHtml(filename, elId, mimeType) {
@@ -343,6 +345,14 @@ $statement->execute([
 		if(sentiment >= 0.55 && sentiment < 1) {
 			return '#67FF66';
 		}
+	}
+
+	function urltoFile(url, filename, mimeType){
+	    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+	    return (fetch(url)
+	        .then(function(res){return res.arrayBuffer();})
+	        .then(function(buf){return new File([buf], filename, {type:mimeType});})
+	    );
 	}
 
 	$(document).ready(function() {
@@ -372,6 +382,13 @@ $statement->execute([
 		$('#keyword').on('blur', function() {
 			$('.help').removeClass("d-block");
 			$('.help').addClass("d-none");
+		});
+
+		$('.share').on('click', function() {
+			var map_code = map.getCanvas().toDataURL();
+			download(map_code, "map.png", "image/png");
+
+
 		});
 
 		$('#search_form').on('submit', function(e) {
@@ -451,6 +468,11 @@ $statement->execute([
 					          "circle-color": getColour(sentiment),
 					          "circle-opacity": 0.3
 					        }
+					      });
+
+					      var dpi = 300;
+					      Object.defineProperty(window, 'devicePixelRatio', {
+					          get: function() {return dpi / 96}
 					      });
 
 					      // Credit: https://stackoverflow.com/a/37794326
