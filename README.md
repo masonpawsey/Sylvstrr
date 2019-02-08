@@ -1,3 +1,4 @@
+
 # 4910-Senior-Project-Fall-2018
 
 
@@ -8,6 +9,8 @@
 - [ ] Bootstrap responsiveness
 
 - [ ] Share result
+
+- [ ] Export map as a high res image
 
 - [ ] Footer floats on mobile?
 
