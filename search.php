@@ -1,5 +1,4 @@
 <?php
-
 // Authenticate me!
 session_start();
 require_once 'vendor/autoload.php';
@@ -70,7 +69,7 @@ if($statement->errorInfo()[0] != "00000") {
 
 // Search for cached queries
 // 6 hours of data is considered "fresh"
-$statement = $dbh->prepare('SELECT sentiment FROM queries WHERE location = :location AND keyword = :keyword AND `time` > DATE_ADD(NOW(), INTERVAL -6 HOUR) ORDER BY `time` DESC LIMIT 1');
+$statement = $dbh->prepare('SELECT sentiment FROM queries WHERE location = :location AND keyword = :keyword AND `time` > DATE_ADD(NOW(), INTERVAL -6 HOUR) AND cached = 0 ORDER BY `time` DESC LIMIT 1');
 $statement->execute([
 	'location' => $_POST['location'],
 	'keyword' => $_POST['keyword']
@@ -80,6 +79,23 @@ $caches = $statement->fetch(PDO::FETCH_ASSOC);
 if($caches['sentiment']) {
 	$xml = '<query was cached>';
 	$sentiment = $caches['sentiment'];
+	// Add this query to our table of queries
+	$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location, sentiment, cached) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location, :sentiment, :cached);');
+	$statement->execute([
+		'uid' => $auth->getCurrentUser()['uid'],
+		'ip' => $_SERVER['REMOTE_ADDR'],
+		'agent' => $_SERVER['HTTP_USER_AGENT']??null,
+		'keyword' => $_POST['keyword'],
+		'location' => $_POST['location'],
+		'sentiment' => $sentiment,
+		'cached' => 1
+	]);
+	// Print errors, if they exist
+	if($statement->errorInfo()[0] != "00000") {
+		print_r($statement->errorInfo());
+		die();
+	}
+	$cached = true;
 } else {
 	// If caches don't exist for that query, run another one!
 	// Run this script as sudo because we hate security :)
@@ -101,7 +117,7 @@ if($caches['sentiment']) {
 
 	$xml .= '</tweets>';
 
-	// Generates 
+	// Generates tweets.xml file for Zak's AI engine `python3 run.py`
 	// $dir = uniqid();
 
 	// if (!file_exists('ai-engine/'.$dir)) {
@@ -144,14 +160,15 @@ if($caches['sentiment']) {
 	$sentiment = $score/count($array);
 
 	// Add this query to our table of queries
-	$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location, sentiment) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location, :sentiment);');
+	$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location, sentiment, cached) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location, :sentiment, :cached);');
 	$statement->execute([
 		'uid' => $auth->getCurrentUser()['uid'],
 		'ip' => $_SERVER['REMOTE_ADDR'],
 		'agent' => $_SERVER['HTTP_USER_AGENT']??null,
 		'keyword' => $_POST['keyword'],
 		'location' => $_POST['location'],
-		'sentiment' => $sentiment
+		'sentiment' => $sentiment,
+		'cached' => 0
 	]);
 	// Print errors, if they exist
 	if($statement->errorInfo()[0] != "00000") {
@@ -163,11 +180,12 @@ if($caches['sentiment']) {
 		echo 'Error:' . curl_error($ch);
 	}
 	curl_close ($ch);
+	$cached = false;
 }
 
 // The array we return holds the resulting Tweets as well as coordinates for the location
 // they passed so we can update the map on home.php, and their most recent searches
-$return = [$result, [$longitude, $latitude], $most_recent_queries, $xml, $sentiment];
+$return = [$result, [$longitude, $latitude], $most_recent_queries, $xml, $sentiment, $dbh->lastInsertId(), $cached];
 print_r(json_encode($return));
 
 $dbh = null;

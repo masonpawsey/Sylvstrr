@@ -7,3 +7,4 @@ vendor/
 credentials.php
 assets/
 .DS_Store
+maps/

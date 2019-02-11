@@ -12,9 +12,11 @@
 
 - [ ] Store maps as base64s in the database to retrieve (would be better to store map code to recreate map...)
 
-- [ ] Export map as a high res image
+- [ ] Export map with a watermark for sylvstrr + image data (timestamp + query log)
 
 - [ ] Footer floats on mobile?
+
+- [x] Export map as a high res image
 
 - [x] Login button doesn't reset from :focus(?) when login fails
 

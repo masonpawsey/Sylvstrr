@@ -183,7 +183,7 @@ $statement->execute([
                                         <tbody>
                                             <?php
                                                 // Get the users searches!
-                                                $statement = $dbh->prepare("SELECT keyword, location, CONVERT_TZ(`time`,'+00:00','-08:00') as `time` FROM queries WHERE uid = :uid ORDER BY `time` DESC");
+                                                $statement = $dbh->prepare("SELECT keyword, sentiment, location, CONVERT_TZ(`time`,'+00:00','-08:00') as `time` FROM queries WHERE uid = :uid ORDER BY `time` DESC");
                                                 $statement->execute([
                                                     'uid' => $auth->getCurrentUser()['uid']
                                                 ]);
@@ -195,13 +195,18 @@ $statement->execute([
                                                     $most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
                                                     foreach ($most_recent_queries as $key => $value) {
                                                         $time = date("M d, Y, h:i:s a", strtotime($value['time']));
-                                                        $sentiment = ['<i class="fas fa-arrow-up"></i> <span class="text-success">positive</span>', '<i class="fas fa-arrow-down"></i> <span class="text-danger">negative</span>', '<i class="fas fa-arrow-right"></i> <span class="text-dark">neutral</span>'][rand(0,2)];
+                                                        if ($value['sentiment'] < 0.40) {
+                                                            $sentiment = '<i class="fas fa-arrow-down"></i> <span class="text-danger">negative ('.$value['sentiment'].')</span>';
+                                                        } else if ($value['sentiment'] >= 0.45 && $value['sentiment'] < 0.55) {
+                                                            $sentiment = '<i class="fas fa-arrow-right"></i> <span class="text-dark">neutral ('.$value['sentiment'].')</span>';
+                                                        } else {
+                                                            $sentiment = '<i class="fas fa-arrow-up"></i> <span class="text-success">positive ('.$value['sentiment'].')</span>';
+                                                        }
                                                         echo "<tr>
                                                             <td>".$value['keyword']."</td>
                                                             <td>".$value['location']."</td>
-                                                            <td>".$time."</td>
+                                                            <td data-sort=".strtotime($value['time']).">".$time."</td>
                                                             <td>".$sentiment."</td></tr>";
-
                                                     }
                                                 }
                                                 ?>

@@ -183,8 +183,8 @@ $statement->execute([
 								  <div class="col">
 									<h5 class="card-title map-title"></h5>
 								  </div>
-								  <div class="col text-right share d-none">
-									<a href="#"><i class="fas fa-arrow-circle-up"></i> Share</a>
+								  <div class="col text-right download d-none">
+									<a href="#"><i class="fas fa-arrow-circle-down"></i> Download</a>
 								  </div>
 								</div>
 							  <div id="map" style="height: 58vh"></div>
@@ -348,11 +348,11 @@ $statement->execute([
 	}
 
 	function urltoFile(url, filename, mimeType){
-	    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
-	    return (fetch(url)
-	        .then(function(res){return res.arrayBuffer();})
-	        .then(function(buf){return new File([buf], filename, {type:mimeType});})
-	    );
+		mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+		return (fetch(url)
+			.then(function(res){return res.arrayBuffer();})
+			.then(function(buf){return new File([buf], filename, {type:mimeType});})
+		);
 	}
 
 	$(document).ready(function() {
@@ -384,11 +384,9 @@ $statement->execute([
 			$('.help').addClass("d-none");
 		});
 
-		$('.share').on('click', function() {
+		$('.download').on('click', function() {
 			var map_code = map.getCanvas().toDataURL();
 			download(map_code, "map.png", "image/png");
-
-
 		});
 
 		$('#search_form').on('submit', function(e) {
@@ -406,12 +404,13 @@ $statement->execute([
 				},
 				success: function(data) {
 					var sentiment = parseFloat(JSON.parse(data)[4]);
+					var last_inserted = JSON.parse(data)[5];
 					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>');
 					$('.debug').append('<button class="btn btn-hollow download-json float-right">Download JSON</button>');
 					$('#debug').html(JSON.parse(data)[0]);
 					$('#xml').text(vkbeautify.xml(JSON.parse(data)[3]));
 					$('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u><small style="margin-left:25px">Score: '+sentiment.toFixed(2)+'<small></strong>');
-					$('.share').removeClass('d-none');
+					$('.download').removeClass('d-none');
 					$('.recent-searches-card-footer').removeClass('d-none');
 					$('#keyword').val('').blur();
 					$('#location').val('').blur();
@@ -436,49 +435,61 @@ $statement->execute([
 						zoom: 7
 					});
 
-					const metersToPixelsAtMaxZoom = (meters, latitude) =>
-					  meters / 0.075 / Math.cos(latitude * Math.PI / 180)
+					const metersToPixelsAtMaxZoom = (meters, latitude) => meters / 0.075 / Math.cos(latitude * Math.PI / 180)
 
 					map.addSource('source_' + map_id, {
-					        "type": "geojson",
-					        "data": {
-					          "type": "FeatureCollection",
-					          "features": [{
-					            "type": "Feature",
-					            "geometry": {
-					              "type": "Point",
-					              "coordinates": [JSON.parse(data)[1][0], JSON.parse(data)[1][1]]
-					            }
-					          }]
-					        }
-					      });
+							"type": "geojson",
+							"data": {
+								"type": "FeatureCollection",
+								"features": [{
+									"type": "Feature",
+								"geometry": {
+									"type": "Point",
+									"coordinates": [JSON.parse(data)[1][0], JSON.parse(data)[1][1]]
+								}
+							  }]
+							}
+						  });
 
-					      map.addLayer({
-					        "id": map_id + '',
-					        "type": "circle",
-					        "source": 'source_' + map_id,
-					        "paint": {
-					          "circle-radius": {
-					            stops: [
-					              [0, 0],
-					              [20, metersToPixelsAtMaxZoom(50000, JSON.parse(data)[1][1])]
-					            ],
-					            base: 2
-					          },
-					          "circle-color": getColour(sentiment),
-					          "circle-opacity": 0.3
-					        }
-					      });
+						map.addLayer({
+							"id": map_id + '',
+							"type": "circle",
+							"source": 'source_' + map_id,
+							"paint": {
+								"circle-radius": {
+									stops: [
+										[0, 0],
+										[20, metersToPixelsAtMaxZoom(50000, JSON.parse(data)[1][1])]
+									],
+									base: 2
+								},
+								"circle-color": getColour(sentiment),
+								"circle-opacity": 0.3
+							}
+						});
 
-					      var dpi = 300;
-					      Object.defineProperty(window, 'devicePixelRatio', {
-					          get: function() {return dpi / 96}
-					      });
+						var dpi = 300;
+						Object.defineProperty(window, 'devicePixelRatio', {
+							get: function() {return dpi / 96}
+						});
 
-					      // Credit: https://stackoverflow.com/a/37794326
+						// Credit: https://stackoverflow.com/a/37794326
+						map_id++;
 
-					      map_id++;
-					
+						$.ajax({
+							url: 'uploadimage.php',
+							type: 'POST',
+							data: {
+								'map_code': map.getCanvas().toDataURL(),
+								'last_inserted': last_inserted
+							},
+							success: function(data) {
+								return;
+							},
+							error: function(request,error) {
+								console.error("Request: "+JSON.stringify(request));
+							}
+						});
 				},
 				error: function(request,error)
 				{
