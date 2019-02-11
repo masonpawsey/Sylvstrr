@@ -61,6 +61,8 @@ $statement->execute([
 	<link rel="stylesheet" type="text/css" href="home-style.css">
 	<script type="text/javascript" src="cities.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 	<link rel="icon" type="image/png" href="./assets/favicon.png">
 	<script>
 	window.paceOptions = {
@@ -113,6 +115,9 @@ $statement->execute([
 				</li>
 				<li>
 					<a href="history">Query history</a>
+				</li>
+				<li>
+					<a href="gallery">Gallery</a>
 				</li>
 				<li>
 					<a href="profile">Profile</a>
@@ -183,8 +188,9 @@ $statement->execute([
 								  <div class="col">
 									<h5 class="card-title map-title"></h5>
 								  </div>
-								  <div class="col text-right download d-none">
-									<a href="#"><i class="fas fa-arrow-circle-down"></i> Download</a>
+								  <div class="col text-right map-options d-none">
+									<a href="#" class="download"><i class="fas fa-arrow-circle-down"></i> Download</a>
+									<a href="#" class="save"><i class="fas fa-cloud-download-alt"></i> Save</a>
 								  </div>
 								</div>
 							  <div id="map" style="height: 58vh"></div>
@@ -357,6 +363,7 @@ $statement->execute([
 
 	$(document).ready(function() {
 		var map_id = 0;
+		var last_inserted = 0;
 
 		$('input').focus(function() {
 			$(this).next('.float-up').addClass('active');
@@ -389,6 +396,24 @@ $statement->execute([
 			download(map_code, "map.png", "image/png");
 		});
 
+		$('.save').on('click', function() {
+			var map_code = map.getCanvas().toDataURL();
+			$.ajax({
+				url: 'uploadimage.php',
+				type: 'POST',
+				data: {
+					'map_code': map.getCanvas().toDataURL(),
+					'last_inserted': last_inserted
+				},
+				success: function(data) {
+					toastr.success('You image has been saved to your gallery', 'Saved!');
+				},
+				error: function(request,error) {
+					console.error("Request: "+JSON.stringify(request));
+				}
+			});
+		});
+
 		$('#search_form').on('submit', function(e) {
 			e.preventDefault();
 			var keyword = $('#keyword').val();
@@ -404,13 +429,13 @@ $statement->execute([
 				},
 				success: function(data) {
 					var sentiment = parseFloat(JSON.parse(data)[4]);
-					var last_inserted = JSON.parse(data)[5];
+					last_inserted = JSON.parse(data)[5];
 					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>');
 					$('.debug').append('<button class="btn btn-hollow download-json float-right">Download JSON</button>');
 					$('#debug').html(JSON.parse(data)[0]);
 					$('#xml').text(vkbeautify.xml(JSON.parse(data)[3]));
 					$('.map-title').html('<strong>Map for <u>'+keyword+'</u> in <u>' +location+ '</u><small style="margin-left:25px">Score: '+sentiment.toFixed(2)+'<small></strong>');
-					$('.download').removeClass('d-none');
+					$('.map-options').removeClass('d-none');
 					$('.recent-searches-card-footer').removeClass('d-none');
 					$('#keyword').val('').blur();
 					$('#location').val('').blur();
@@ -430,12 +455,14 @@ $statement->execute([
 						}
 					});
 					$('.recent-searches').html(recent_searches_html);
-					map.flyTo({
-						center: {lng: JSON.parse(data)[1][0], lat: JSON.parse(data)[1][1]},
-						zoom: 7
-					});
+					
 
 					const metersToPixelsAtMaxZoom = (meters, latitude) => meters / 0.075 / Math.cos(latitude * Math.PI / 180)
+
+					var dpi = 300;
+					Object.defineProperty(window, 'devicePixelRatio', {
+						get: function() {return dpi / 96}
+					});
 
 					map.addSource('source_' + map_id, {
 							"type": "geojson",
@@ -466,30 +493,16 @@ $statement->execute([
 								"circle-color": getColour(sentiment),
 								"circle-opacity": 0.3
 							}
-						});
+						})
 
-						var dpi = 300;
-						Object.defineProperty(window, 'devicePixelRatio', {
-							get: function() {return dpi / 96}
+						map.flyTo({
+							center: {lng: JSON.parse(data)[1][0], lat: JSON.parse(data)[1][1]},
+							zoom: 7
 						});
 
 						// Credit: https://stackoverflow.com/a/37794326
 						map_id++;
 
-						$.ajax({
-							url: 'uploadimage.php',
-							type: 'POST',
-							data: {
-								'map_code': map.getCanvas().toDataURL(),
-								'last_inserted': last_inserted
-							},
-							success: function(data) {
-								return;
-							},
-							error: function(request,error) {
-								console.error("Request: "+JSON.stringify(request));
-							}
-						});
 				},
 				error: function(request,error)
 				{

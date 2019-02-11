@@ -10,11 +10,11 @@
 
 - [ ] Share map as a picture to social media
 
-- [ ] Store maps as base64s in the database to retrieve (would be better to store map code to recreate map...)
-
 - [ ] Export map with a watermark for sylvstrr + image data (timestamp + query log)
 
 - [ ] Footer floats on mobile?
+
+- [x] Store user image gallery
 
 - [x] Export map as a high res image
 

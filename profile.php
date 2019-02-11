@@ -72,6 +72,9 @@ $statement->execute([
 					<a href="history">Query history</a>
 				</li>
 				<li>
+					<a href="gallery">Gallery</a>
+				</li>
+				<li>
 					<a href="profile">Profile</a>
 				</li>
 			</ul>
