@@ -55,21 +55,6 @@ if($statement->errorInfo()[0] != "00000") {
 // so spaces will separate the keywords)
 $keyword = "'".$_POST['keyword']."'";
 
-// Add this query to our table of queries
-$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location);');
-$statement->execute([
-	'uid' => $auth->getCurrentUser()['uid'],
-	'ip' => $_SERVER['REMOTE_ADDR'],
-	'agent' => $_SERVER['HTTP_USER_AGENT']??null,
-	'keyword' => $_POST['keyword'],
-	'location' => $_POST['location']
-]);
-// Print errors, if they exist
-if($statement->errorInfo()[0] != "00000") {
-	print_r($statement->errorInfo());
-	die();
-}
-
 // Get most recent queries
 $statement = $dbh->prepare('SELECT `time`, keyword, location FROM queries WHERE uid = :uid ORDER BY `time` DESC LIMIT 3');
 $statement->execute([
@@ -83,60 +68,102 @@ if($statement->errorInfo()[0] != "00000") {
 	$most_recent_queries = $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Run this script as sudo because we hate security :)
-// (and because ./scrape-twitter is protected and www-data can't get to it)
-$raw = shell_exec("sudo /var/www/html/run.sh $latitude $longitude $keyword");
+// Search for cached queries
+// 6 hours of data is considered "fresh"
+$statement = $dbh->prepare('SELECT sentiment FROM queries WHERE location = :location AND keyword = :keyword AND `time` > DATE_ADD(NOW(), INTERVAL -6 HOUR) ORDER BY `time` DESC LIMIT 1');
+$statement->execute([
+	'location' => $_POST['location'],
+	'keyword' => $_POST['keyword']
+]);
 
-$keyword = $_POST['keyword'];
-// Check for the keyword
-$result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
-// Check for the keyword without spaces
-$keyword = str_replace(' ', '', $keyword);
-$result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
+$caches = $statement->fetch(PDO::FETCH_ASSOC);
+if($caches['sentiment']) {
+	$xml = '<query was cached>';
+	$sentiment = $caches['sentiment'];
+} else {
+	// If caches don't exist for that query, run another one!
+	// Run this script as sudo because we hate security :)
+	// (and because ./scrape-twitter is protected and www-data can't get to it)
+	$raw = shell_exec("sudo /var/www/html/run.sh $latitude $longitude $keyword");
 
-$xml = '<?xml version="1.0" encoding="UTF-8"?><tweets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+	$keyword = $_POST['keyword'];
+	// Check for the keyword
+	$result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
+	// Check for the keyword without spaces
+	$keyword = str_replace(' ', '', $keyword);
+	$result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
 
-foreach (json_decode($raw) as $key => $value) {
-	$xml .= '<tweet><text>'.htmlspecialchars($value->text).'</text><sentiment></sentiment></tweet>';
+	$xml = '<?xml version="1.0" encoding="UTF-8"?><tweets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+
+	foreach (json_decode($raw) as $key => $value) {
+		$xml .= '<tweet><text>'.htmlspecialchars($value->text).'</text><sentiment></sentiment></tweet>';
+	}
+
+	$xml .= '</tweets>';
+
+	// Generates 
+	// $dir = uniqid();
+
+	// if (!file_exists('ai-engine/'.$dir)) {
+	// 	mkdir('ai-engine/'.$dir, 0775, true);
+	// }
+
+	// $file = fopen("ai-engine/" . $dir . "/tweets.xml" , "w");
+	// fwrite($file, $xml);
+	// fclose($file);
+
+	// xml is passed to AI engine
+	// JSON is passed to browser FOR THE MOMENT - will be replaced with just the resulting sentiment
+
+	// Post to Azure for sentiment analysis
+	$prefix = '{"documents": ';
+	$suffix = '}';
+
+	$body = $prefix.$raw.$suffix;
+
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_POST, 1);
+
+	$headers = array();
+	$headers[] = 'Content-Type: application/json';
+	$headers[] = 'Ocp-Apim-Subscription-Key: ' . $azure_key;
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+	$azure_result = curl_exec($ch);
+
+	$array = json_decode($azure_result, true)['documents'];
+	$score = 0;
+	foreach ($array as $key => $value) {
+		$score += $value['score'];
+	}
+
+	$sentiment = $score/count($array);
+
+	// Add this query to our table of queries
+	$statement = $dbh->prepare('INSERT INTO queries (uid, ip, agent, `time`, keyword, location, sentiment) VALUES (:uid, :ip, :agent, NOW(), :keyword, :location, :sentiment);');
+	$statement->execute([
+		'uid' => $auth->getCurrentUser()['uid'],
+		'ip' => $_SERVER['REMOTE_ADDR'],
+		'agent' => $_SERVER['HTTP_USER_AGENT']??null,
+		'keyword' => $_POST['keyword'],
+		'location' => $_POST['location'],
+		'sentiment' => $sentiment
+	]);
+	// Print errors, if they exist
+	if($statement->errorInfo()[0] != "00000") {
+		print_r($statement->errorInfo());
+		die();
+	}
+
+	if (curl_errno($ch)) {
+		echo 'Error:' . curl_error($ch);
+	}
+	curl_close ($ch);
 }
-
-$xml .= '</tweets>';
-
-// xml is passed to AI engine
-// JSON is passed to browser FOR THE MOMENT - will be replaced with just the resulting sentiment
-
-// Post to Azure for sentiment analysis
-$prefix = '{"documents": ';
-$suffix = '}';
-
-$body = $prefix.$raw.$suffix;
-
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_POST, 1);
-
-$headers = array();
-$headers[] = 'Content-Type: application/json';
-$headers[] = 'Ocp-Apim-Subscription-Key: ' . $azure_key;
-curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-$azure_result = curl_exec($ch);
-
-$array = json_decode($azure_result, true)['documents'];
-$score = 0;
-foreach ($array as $key => $value) {
-	$score += $value['score'];
-}
-
-$sentiment = $score/count($array);
-
-if (curl_errno($ch)) {
-    echo 'Error:' . curl_error($ch);
-}
-curl_close ($ch);
 
 // The array we return holds the resulting Tweets as well as coordinates for the location
 // they passed so we can update the map on home.php, and their most recent searches

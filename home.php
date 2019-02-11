@@ -405,7 +405,7 @@ $statement->execute([
 					'location' : location
 				},
 				success: function(data) {
-					var sentiment = JSON.parse(data)[4];
+					var sentiment = parseFloat(JSON.parse(data)[4]);
 					$('.xml').append('<button class="btn btn-hollow download-xml float-right">Download XML</button>');
 					$('.debug').append('<button class="btn btn-hollow download-json float-right">Download JSON</button>');
 					$('#debug').html(JSON.parse(data)[0]);
@@ -478,7 +478,6 @@ $statement->execute([
 					      // Credit: https://stackoverflow.com/a/37794326
 
 					      map_id++;
-
 					
 				},
 				error: function(request,error)
