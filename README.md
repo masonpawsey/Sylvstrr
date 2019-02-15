@@ -1,9 +1,6 @@
 
 # 4910-Senior-Project-Fall-2018
 
-
-- [ ] Text Twilio for account info
-
 - [ ] Ability for users to edit their profile (avatar, common name instead of email, etc)
 
 - [ ] Bootstrap responsiveness
@@ -13,6 +10,8 @@
 - [ ] Export map with a watermark for sylvstrr + image data (timestamp + query log)
 
 - [ ] Footer floats on mobile?
+
+- [x] Text Twilio for account info
 
 - [x] Store user image gallery
 
