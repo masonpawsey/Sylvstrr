@@ -1,8 +1,7 @@
 <?php
 
 // Connect to the database
-$user = 'root';
-$pass = '25dba36cbfa5b0a17a03a7fb8e10c96496de6d99b5459fc2';
+require_once('../credentials.php');
 $dbh = new PDO('mysql:host=localhost;dbname=tweets', $user, $pass);
 
 for ($i=0; $i < count(glob('./jsons/*.json')); $i++) { 
