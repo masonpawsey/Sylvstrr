@@ -138,14 +138,14 @@ if ($auth->isLogged()) {
 			</div>
 		</div>
 		<br><br>
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col"></div>
 			<div class="col text-right" style="position: absolute; bottom: 10;">
 				<a href="trainer/trainer.php">
 					<button type="button" class="btn btn-primary">Train me</button>
 				</a>
 			</div>
-		</div>
+		</div> -->
 	</main>
 	<script>
 	function getRandomInRange(from, to, fixed) {
