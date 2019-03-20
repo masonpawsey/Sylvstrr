@@ -66,7 +66,7 @@ def search_hashtag(api, subject):
             print(box)
             t_loc_tweets += 1
         elif tweet.user.location:
-            g = geocoder.mapquest(tweet.user.location, key='qAFso4GZALGS7K304pgKQulVb7FWbaiV') #CHANGE THIS YOU ASSHOLE
+            g = geocoder.mapquest(tweet.user.location, key=#KEY) #CHANGE THIS YOU ASSHOLE
             location = str(g.lat) + ", " + str(g.lng)
             user_loc_tweets += 1
         else:
