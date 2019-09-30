@@ -3,6 +3,7 @@
  * Copyright 2013-2017 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
  */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,900');
  html {
    position: relative;
    min-height: 100%;
@@ -28,6 +29,10 @@ body {
   border: 1px red solid;
   padding: 25px !important;
   background: red;
+}
+
+.navbar-brand {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .navbar {
@@ -165,7 +170,7 @@ nav a {
 }
 
 .input-effect {
-  padding: 0 5%;
+  padding: 0 25px;
 }
 
 .keyword-label.active {
@@ -344,6 +349,10 @@ ul {
   display: block;
 }
 
+.header-picture {
+  border-radius: 25px;
+}
+
 .header-picture:hover, .profile-picture:hover {
   cursor: pointer;
 }
@@ -372,4 +381,65 @@ svg path, svg rect { fill: #4285F4; }
     position: relative;
     margin-right: 0;
   }
+}
+
+.button {
+  font-family:"Montserrat", sans-serif;
+  font-size:16px;
+  letter-spacing:-0.1px;
+  font-weight:600;
+  line-height:16px;
+  text-decoration:none !important;
+  background-color:#fff;
+  background:#fff;
+  color:#fff !important;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  justify-content:center;
+  padding:16px 32px;
+  height:48px;
+  text-align:center;
+  white-space:nowrap
+}
+
+.button-primary {
+  background:#12c1e9;
+  border-radius: 4px;
+  background:linear-gradient(65deg, #1A85F1 0, #274BE3 100%)
+}
+
+.button-success {
+  background: #1D976C;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #69b384, #1D976C);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #69b384, #1D976C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.button-danger {
+  background: #EB3349;
+  background: -webkit-linear-gradient(to right, #F45C43, #EB3349);
+  background: linear-gradient(to right, #F45C43, #EB3349) !important;
+}
+
+input {
+  padding: 12px;
+  font-family: 'Oxygen', sans-serif;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 2px solid transparent;
+  /*text-align: center;*/
+  width: 90%;
+  font-size: 16px;
+  transition: border 0.2s, background-color 0.2s;
+}
+
+.field {
+  background-color: #ecf0f1;
+  width: 100%;
+  display: block;
+  margin: 10 auto;
+}
+
+.field:focus {
+  outline: none;
 }

@@ -102,6 +102,12 @@ if($caches['sentiment']) {
 	// (and because ./scrape-twitter is protected and www-data can't get to it)
 	$raw = shell_exec("sudo /var/www/html/run.sh $latitude $longitude $keyword");
 
+	// Convert to an array to remove duplicates
+	$array = array_map("unserialize", array_unique(array_map("serialize", json_decode($raw, true))));
+
+	// Convert back to JSON for API call
+	$raw = json_encode($array);
+
 	$keyword = $_POST['keyword'];
 	// Check for the keyword
 	$result = preg_replace("/\p{L}*?".preg_quote($keyword)."\p{L}*/ui", "<span class='highlight'>$0</span>", $raw);
