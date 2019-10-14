@@ -4,8 +4,11 @@ This project was a team effort by Mason Pawsey, Zak Worman, Tyler Sharp, and Ran
 
 ## Personnel
 Mason Pawsey - General development
+
 Zak Worman - AI development
+
 Tyler Sharp - General development
+
 Randi Al Ghrer - Map development
 
 ## Purpose
